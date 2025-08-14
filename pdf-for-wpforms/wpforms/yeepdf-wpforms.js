@@ -18,17 +18,15 @@
                   }
              });
          })
-        $("body").on("change","#wpforms-panel-field-settings-pdf_creator_enable",function(e){
+        $("body").on("change","#wpforms-panel-field-settings-yeepdf_creator_enable",function(e){
             if($(this).is(":checked")){
-                $(".wpforms-pdf_creator").show().removeClass("hidden");
+                $(".wpforms-yeepdf_creator").show().removeClass("hidden");
             }else{
-                $(".wpforms-pdf_creator").hide().addClass("hidden");
+                $(".wpforms-yeepdf_creator").hide().addClass("hidden");
             }
         })
-        $("body").on("click",".wpforms-pdf_creator-add",function(e){
-            if(yeepdf_wpforms.pro == "pro"){
-                return;
-            }
+        $("body").on("click",".wpforms-yeepdf_creator-add",function(e){
+            
             var $el = $(this);
             var $builder = $("#wpforms-builder");
             var nextID = Number( $el.attr( 'data-next-id' ) ),

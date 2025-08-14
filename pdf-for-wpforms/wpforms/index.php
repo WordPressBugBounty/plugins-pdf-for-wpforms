@@ -235,10 +235,10 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend {
 	}
 	function wpforms_builder_strings($strings){
 		$add = array(
-			'pdf_creator_delete'            => esc_html__( 'Are you sure you want to delete this pdf?', "pdf-for-wpforms" ),
-			'pdf_creator_prompt'            => esc_html__( 'Enter a pdf name', "pdf-for-wpforms" ),
-			'pdf_creator_ph'                => esc_html__( 'Eg: User pdf', "pdf-for-wpforms" ),
-			'pdf_creator_error'             => esc_html__( 'You must provide a pdf name', "pdf-for-wpforms" )
+			'yeepdf_creator_delete'            => esc_html__( 'Are you sure you want to delete this pdf?', "pdf-for-wpforms" ),
+			'yeepdf_creator_prompt'            => esc_html__( 'Enter a pdf name', "pdf-for-wpforms" ),
+			'yeepdf_creator_ph'                => esc_html__( 'Eg: User pdf', "pdf-for-wpforms" ),
+			'yeepdf_creator_error'             => esc_html__( 'You must provide a pdf name', "pdf-for-wpforms" )
 		);
 		return array_merge($strings,$add);
 	}
@@ -265,17 +265,17 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend {
 	function process_pdf_conditionals( $process, $fields, $form_data, $id ) {
 		$settings = $form_data['settings'];
 		if (
-			empty( $settings['pdf_creator'][ $id ]['conditional_logic'] ) ||
-			empty( $settings['pdf_creator'][ $id ]['conditional_type'] ) ||
-			empty( $settings['pdf_creator'][ $id ]['conditionals'] )
+			empty( $settings['yeepdf_creator'][ $id ]['conditional_logic'] ) ||
+			empty( $settings['yeepdf_creator'][ $id ]['conditional_type'] ) ||
+			empty( $settings['yeepdf_creator'][ $id ]['conditionals'] )
 		) {
 			return $process;
 		}
-		$conditionals = $this->clear_empty_rules( $settings['pdf_creator'][ $id ]['conditionals'] );
+		$conditionals = $this->clear_empty_rules( $settings['yeepdf_creator'][ $id ]['conditionals'] );
 		if ( empty( $conditionals ) ) {
 			return $process;
 		}
-		$type    = $settings['pdf_creator'][ $id ]['conditional_type'];
+		$type    = $settings['yeepdf_creator'][ $id ]['conditional_type'];
 		if( function_exists("wpforms_conditional_logic") ){
 			$process = wpforms_conditional_logic()->process( $fields, $form_data, $conditionals );
 		}
@@ -370,8 +370,20 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend {
 		$attachments_notifications = $this->attachments_notifications;
 		$attachments = array();
 		$upload_dir   = wp_upload_dir();
-		if(isset($form_data["settings"]["pdf_creator_enable"]) && $form_data["settings"]["pdf_creator_enable"] ==1 ) {
-			$pdfs = $form_data["settings"]["pdf_creator"];
+		$form_settings = $form_data["settings"];
+		//cập nhật settings mới
+		if(!isset($form_settings["yeepdf_creator_enable"])){
+			if(isset($form_settings["pdf_creator_enable"])){
+				$form_settings["yeepdf_creator_enable"] = $form_settings["pdf_creator_enable"];
+			}
+		}
+		if(!isset($form_settings["yeepdf_creator"])){
+			if(isset($form_settings["pdf_creator"])){
+				$form_settings["yeepdf_creator"] = $form_settings["pdf_creator"];
+			}
+		}
+		if(isset($form_settings["yeepdf_creator_enable"]) && $form_settings["yeepdf_creator_enable"] ==1 ) {
+			$pdfs = $form_settings["yeepdf_creator"];
 			$data_entry = array();
 			foreach( $entry  as $k => $v){
 				if($k == "fields"){
@@ -521,12 +533,12 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend {
 		return $message;
 	}
 	function add_tab_settings_sections($sections ){
-		$sections["pdf_creator"] = esc_html__("PDF","pdf-for-wpforms");
+		$sections["yeepdf_creator"] = esc_html__("PDF","pdf-for-wpforms");
 		return $sections;
 	}
 	function add_tab_settings($settings){
 		?>
-		<div class="wpforms-panel-content-section wpforms-panel-content-section-pdf_creator" data-panel="pdf_creator">
+		<div class="wpforms-panel-content-section wpforms-panel-content-section-yeepdf_creator" data-panel="yeepdf_creator">
 			<?php $this->form_settings_pdf_creator($settings) ?>
 		</div>
 		<?php
@@ -534,37 +546,51 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend {
 	public function form_settings_pdf_creator( $settings ) {
 		$form_id = $settings->form->ID;
 		$form_settings = ! empty( $settings->form_data['settings'] ) ? $settings->form_data['settings'] : [];
-		$pdfs = is_array( $form_settings ) && isset( $form_settings['pdf_creator'] ) ? $form_settings['pdf_creator'] : [];
-		$form_settings = ! empty( $settings->form_data['settings'] ) ? $settings->form_data['settings'] : [];
+		$form_data = ! empty( $settings->form_data ) ? $settings->form_data : [];
+
+
+		//nếu không tồn tại settings mới thì lấy settings củ
+		if(!isset( $form_settings['yeepdf_creator_enable'] )){
+			if(isset($form_settings['pdf_creator_enable'] )){
+				$form_settings["yeepdf_creator_enable"] = $form_settings['pdf_creator_enable'];
+			}
+		}
+		if(!isset( $form_settings['yeepdf_creator'] )){
+			if(isset($form_settings['pdf_creator'] )){
+				$form_settings["yeepdf_creator"] = $form_settings['pdf_creator'];
+			}
+		}
+		$form_data["settings"] = $form_settings;
+		$pdfs = is_array( $form_settings ) && isset( $form_settings['yeepdf_creator'] ) ? $form_settings['yeepdf_creator'] : [];
 		if ( empty( $pdfs ) ) {
 			$next_id = 2;
-			$pdfs[1]['template_id']    = ! empty( $form_settings['pdf_creator_template_id'] ) ? $form_settings['pdf_creator_template_id'] : '';
-			$pdfs[1]['name']        = ! empty( $form_settings['pdf_creator_name'] ) ? $form_settings['pdf_creator_name'] : '';
-			$pdfs[1]['password']        = ! empty( $form_settings['pdf_creator_password'] ) ? $form_settings['pdf_creator_password'] : '';
+			$pdfs[1]['template_id']    = ! empty( $form_settings['yeepdf_creator_template_id'] ) ? $form_settings['yeepdf_creator_template_id'] : '';
+			$pdfs[1]['name']        = ! empty( $form_settings['yeepdf_creator_name'] ) ? $form_settings['yeepdf_creator_name'] : '';
+			$pdfs[1]['password']        = ! empty( $form_settings['yeepdf_creator_password'] ) ? $form_settings['yeepdf_creator_password'] : '';
 		} else {
 			$next_id = max( array_keys( $pdfs ) ) + 1;
 		}
 		$default_pdfs_key = min( array_keys( $pdfs ) );
-		$hidden = empty( $settings->form_data['settings']['pdf_creator_enable'] ) ? 'hidden' : '';
+		$hidden = empty( $form_settings['yeepdf_creator_enable'] ) ? 'hidden' : '';
 		?>
 		<div class="wpforms-panel-content-section-title">
-			<span id="wpforms-builder-settings-pdf_creator-title">
+			<span id="wpforms-builder-settings-yeepdf_creator-title">
 				<?php esc_html_e( 'PDF', "pdf-for-wpforms" ) ?>
 			</span>
-			<button class="wpforms-pdf_creator-add wpforms-builder-settings-block-add" data-block-type="pdf_creator" data-next-id="<?php echo absint( $next_id ) ?>"><?php esc_html_e("Add New PDF","pdf-for-wpforms") ?></button>
+			<button class="wpforms-yeepdf_creator-add wpforms-builder-settings-block-add" data-block-type="yeepdf_creator" data-next-id="<?php echo absint( $next_id ) ?>"><?php esc_html_e("Add New PDF","pdf-for-wpforms") ?></button>
 		</div>
 		<?php
 		wpforms_panel_field(
 			'toggle',
 			'settings',
-			'pdf_creator_enable',
-			$settings->form_data,
+			'yeepdf_creator_enable',
+			$form_data,
 			esc_html__( 'Enable PDF', "pdf-for-wpforms" ),
 			[
-				'value' => empty( $form_settings['pdf_creator_enable'] ) ? 0 : 1,
+				'value' => empty( $form_settings['yeepdf_creator_enable'] ) ? 0 : 1,
 				'class' => 'pdfcreator_datas_enable',
 				'input_class' => 'pdfcreator_datas_enable',
-				'data' => array("tab"=>".wpforms-pdf_creator")
+				'data' => array("tab"=>".wpforms-yeepdf_creator")
 			]
 		);
 		$yeepdfs = get_posts(array( 'post_type' => 'yeepdf','post_status' => 'publish','numberposts'=>-1 ) );
@@ -585,21 +611,21 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend {
 			$name          = ! empty( $pdf['name'] ) ? $pdf['name'] : esc_html__( 'Default PDF', "pdf-for-wpforms" );
 			$closed_state  = '';
 			$toggle_state  = '<i class="fa fa-chevron-circle-up"></i>';
-			$block_classes = 'wpforms-pdf_creator wpforms-builder-settings-block '.$hidden;
-			$from_name_after = apply_filters( 'wpforms_builder_pdf_creator_from_name_after', '', $settings->form_data, $id );
-			if ( ! empty( $settings->form_data['id'] ) && 'closed' === wpforms_builder_settings_block_get_state( $settings->form_data['id'], $id, 'pdf_creator' ) ) {
+			$block_classes = 'wpforms-yeepdf_creator wpforms-builder-settings-block '.$hidden;
+			$from_name_after = apply_filters( 'wpforms_builder_yeepdf_creator_from_name_after', '', $settings->form_data, $id );
+			if ( ! empty( $settings->form_data['id'] ) && 'closed' === wpforms_builder_settings_block_get_state( $settings->form_data['id'], $id, 'yeepdf_creator' ) ) {
 				$closed_state = 'style="display:none"';
 				$toggle_state = '<i class="fa fa-chevron-circle-down"></i>';
 			}
 			if ( $default_pdfs_key === $id ) {
 				$block_classes .= ' wpforms-builder-settings-block-default';
 			}
-			do_action( 'wpforms_form_settings_pdf_creator_single_before', $settings, $id );
+			do_action( 'wpforms_form_settings_yeepdf_creator_single_before', $settings, $id );
 			?>
-			<div class="<?php echo esc_attr( $block_classes ); ?>" data-block-type="pdf_creator" data-block-id="<?php echo absint( $id ); ?>">
+			<div class="<?php echo esc_attr( $block_classes ); ?>" data-block-type="yeepdf_creator" data-block-id="<?php echo absint( $id ); ?>">
 				<div class="wpforms-builder-settings-block-header">
 					<div class="wpforms-builder-settings-block-actions">
-						<?php do_action( 'wpforms_form_settings_pdf_creator_single_action', $id, $pdf, $settings ); ?>
+						<?php do_action( 'wpforms_form_settings_yeepdf_creator_single_action', $id, $pdf, $settings ); ?>
 						<button class="wpforms-builder-settings-block-clone" title="<?php esc_attr_e( 'Clone', "pdf-for-wpforms" ); ?>"><i class="fa fa-copy"></i></button><!--
 						--><button class="wpforms-builder-settings-block-delete" title="<?php esc_attr_e( 'Delete', "pdf-for-wpforms" ); ?>"><i class="fa fa-trash-o"></i></button><!--
 						--><button class="wpforms-builder-settings-block-toggle" title="<?php esc_attr_e( 'Open / Close', "pdf-for-wpforms" ); ?>">
@@ -611,7 +637,7 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend {
 							<?php echo esc_html( $name ); ?>
 						</span>
 						<div class="wpforms-builder-settings-block-name-edit">
-							<input type="text" name="settings[pdf_creator][<?php echo absint( $id ); ?>][name]" value="<?php echo esc_attr( $name ); ?>">
+							<input type="text" name="settings[yeepdf_creator][<?php echo absint( $id ); ?>][name]" value="<?php echo esc_attr( $name ); ?>">
 						</div>
 						<button class="wpforms-builder-settings-block-edit" title="<?php esc_attr_e( 'Edit', "pdf-for-wpforms" ); ?>"><i class="fa fa-pencil"></i></button>
 					</div>
@@ -622,9 +648,9 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend {
 					$class_logic_type_id = "";
 					wpforms_panel_field(
 						'select',
-						'pdf_creator',
+						'yeepdf_creator',
 						'template_id',
-						$settings->form_data,
+						$form_data,
 						esc_html__( 'Choose template', "pdf-for-wpforms" ),
 						[
 							'options'    => $list_templates,
@@ -648,9 +674,9 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend {
 						}
 						wpforms_panel_field(
 								'checkbox',
-								'pdf_creator',
+								'yeepdf_creator',
 								'pdf_notifications_'.$id_n,
-								$settings->form_data,
+								$form_data,
 								esc_html( $notification_name),
 								[
 									'tooltip'    => esc_html__("Send the PDF as an email attachment for the selected notifications.","pdf-for-wpforms") ,
@@ -661,9 +687,9 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend {
 					}
 					wpforms_panel_field(
 								'text',
-								'pdf_creator',
+								'yeepdf_creator',
 								'yeepdf_name',
-								$settings->form_data,
+								$form_data,
 								esc_html__( 'PDF Template Custom Name', "pdf-for-wpforms" ),
 								[
 									'rows'       => 6,
