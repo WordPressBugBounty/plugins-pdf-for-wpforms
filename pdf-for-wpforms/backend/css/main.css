@@ -1474,3 +1474,7 @@ table.rc-table-resizing thead > th > a {
 #yeepdf-setup-template .list-view-templates {
   padding-left: 80px;
 }
+
+.yeepdf-builder-container .mce-tinymce.mce-container.mce-fullscreen {
+  width: 95% !important;
+}

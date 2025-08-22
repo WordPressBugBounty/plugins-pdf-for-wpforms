@@ -51,6 +51,13 @@
                 },
                 stop: function (e, ui) {
                     ui.helper.removeClass('yeepdfemail-temp');
+                    tinymce.init({
+                        selector: '.yeepdf-table-builder th, .yeepdf-table-builder td',
+                        inline: true,
+                        menubar: true,
+                        toolbar: false
+                      });
+                      $(".yeepdf-table-builder").resizableColumns();
                 },
                 connectToSortable: ".builder-row",
                 revert : 0,

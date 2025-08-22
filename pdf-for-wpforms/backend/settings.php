@@ -280,6 +280,9 @@ class Yeepdf_Settings_Main {
 		    	)  );
 		}			
 		// Handle font uploads
+		if (!current_user_can('manage_options')) {
+	        return;
+	    }
 	    $upload_dir = wp_upload_dir();
 	    $fonts_dir  = trailingslashit( $upload_dir['basedir'] ) . 'pdfs/fonts/';
 	    $allowed_exts = array( 'ttf' );

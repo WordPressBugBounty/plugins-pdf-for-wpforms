@@ -106,12 +106,12 @@
             remove_script_host: false,
             convert_urls: false,
             forced_root_block : false,
-            plugins: ["link textcolor colorpicker image code_toggle"],
+            plugins: ["link textcolor colorpicker image code_toggle fullscreen"],
             toolbar:
                 [
                     'bold italic underline | fontselect styleselect',
                     'fontsizeselect | forecolor | backcolor | link image',
-                    'yeepdf_shortcodes | code_toggle'
+                    'yeepdf_shortcodes | code_toggle | fullscreen'
                 ],   
             fontsize_formats: '10px 11px 12px 13px 14px 15px 16px 17px 18px 19px 20px 22px 24px 26px 28px 30px 35px 40px 50px 60px',
             setup:function(ed) {
@@ -446,7 +446,6 @@
                 field.html(value);
             }, 1000);
         })
-
         //
         if ($('#yeepdf-setup-template_id').length && $('#yeepdf-setup-template_id').val() == '') {
             if ($('#yeepdf-setup-type').length && $('#yeepdf-setup-type').val() !== '') {

@@ -74,6 +74,12 @@
                     }
                     row.find(".builder-row").yeepdf_element_sortable();             
                     row.appendTo(".builder__list--js"); 
+                    tinymce.init({
+                      selector: '.yeepdf-table-builder th, .yeepdf-table-builder td',
+                      inline: true,
+                      menubar: true,
+                      toolbar: false
+                    });
                     $(".yeepdf-table-builder").resizableColumns();               
                 }
             },

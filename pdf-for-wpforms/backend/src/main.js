@@ -186,6 +186,13 @@
                                     }
                                   }
                                   builder.find(key).attr(attr,data);
+                                  tinymce.init({
+                                    selector: '.yeepdf-table-builder th, .yeepdf-table-builder td',
+                                    inline: true,
+                                    menubar: true,
+                                    toolbar: false
+                                  });
+                                  $(".yeepdf-table-builder").resizableColumns();  
                                 }
                                 break;
                               case "data-row":
@@ -211,6 +218,13 @@
                                     }
                                   }
                                   builder.find(key).attr(attr,data);
+                                  tinymce.init({
+                                    selector: '.yeepdf-table-builder th, .yeepdf-table-builder td',
+                                    inline: true,
+                                    menubar: true,
+                                    toolbar: false
+                                  });
+                                  $(".yeepdf-table-builder").resizableColumns();  
                                 }
                                 break;
                               case "html_not_change":
