@@ -89,7 +89,7 @@ class Yeepdf_Builder_PDF_Shortcode {
 				$atts = shortcode_atts( array(
 					'unicode' => 'f2b4',
 				), $atts);
-				return '<span class="fontawesome">&#x'.$atts["unicode"].';</span>';
+				return '<span class="fontawesome">&#x'.esc_html($atts["unicode"]).';</span>';
 				break;
 			case "yeepdf_site_url":
 				return site_url();
@@ -159,8 +159,8 @@ class Yeepdf_Builder_PDF_Shortcode {
 					'width' => 'auto',
 					'height' => 'auto',
 				), $atts);
-				$width = $atts["width"];
-				$height = $atts["height"];
+				$width = esc_html($atts["width"]);
+				$height = esc_html($atts["height"]);
 				if(is_numeric($height) ){
 					$height .= "px";
 				}

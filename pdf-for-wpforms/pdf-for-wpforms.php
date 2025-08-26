@@ -3,10 +3,12 @@
  * Plugin Name: PDF for WPForms + Drag and Drop Template Builder
  * Description:  WPForms PDF Customizer is a helpful tool that helps you build and customize the PDF Templates for WPforms.
  * Plugin URI: https://add-ons.org/plugin/wpforms-pdf-generator-attachment/
- * Version: 6.2.1
+ * Version: 6.3.0
  * Requires PHP: 5.6
  * Author: add-ons.org
  * Author URI: https://add-ons.org/
+ * Text Domain: pdf-for-wpforms
+ * Domain Path: /languages
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
@@ -42,8 +44,12 @@ if(!class_exists('Yeepdf_Creator_Builder')) {
 class Yeepdf_Creator_Wpforms_Builder { 
     function __construct(){
         register_activation_hook( __FILE__, array($this,'activation') );
+        add_action( 'init', array($this,'load_textdomain' ));
         include BUIDER_PDF_WPFORMS_PLUGIN_PATH."wpforms/index.php";
         include_once BUIDER_PDF_WPFORMS_PLUGIN_PATH."yeekit/document.php"; 
+    }
+    function load_textdomain(){
+    	load_plugin_textdomain( 'pdf-for-wpforms', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); 
     }
     function activation() {
         $check = get_option( "yeepdf_wpforms_setup" );

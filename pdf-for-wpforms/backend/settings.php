@@ -7,7 +7,7 @@ class Yeepdf_Settings_Main {
 		add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
 		add_action( 'wp_ajax_pdfceator_remove_font', array($this,"remove_font"));
 		add_action( 'yeepdf_custom_sizes', array($this,"add_sizes"));
-		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
+		add_action( 'admin_init', array( $this, 'plugins_loaded' ) );
 		add_action( 'wp_ajax_yeepdf_dropbox_client_id_validate', [ $this, 'ajax_validate_api_token' ] );
 		add_action( "yeepdf_after_settings", array($this,"yeepdf_after_settings"),10);
 	}

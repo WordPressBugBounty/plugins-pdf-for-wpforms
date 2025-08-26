@@ -26,7 +26,6 @@
             }
         })
         $("body").on("click",".wpforms-yeepdf_creator-add",function(e){
-            
             var $el = $(this);
             var $builder = $("#wpforms-builder");
             var nextID = Number( $el.attr( 'data-next-id' ) ),

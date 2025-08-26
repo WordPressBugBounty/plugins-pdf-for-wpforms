@@ -3,7 +3,7 @@ Contributors: addonsorg
 Tags: form pdf, WPForms pdf,contact form pdf, pdf contact form, pdf WPForms
 Requires at least: 2.0
 Tested up to: 6.8
-Stable tag: 6.2.1
+Stable tag: 6.3.0
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -89,6 +89,9 @@ You can create unlimited PDF files for 1-time submission form, depending on the 
 Document include in plugin
 
 == Changelog ==
+= 6.3.0 =
+- Fixed: Security update
+
 = 6.2.1 =
 - Added:  Compatible with WPForms 1.9
 - Fixed:  Save settings with WPForms 1.9
