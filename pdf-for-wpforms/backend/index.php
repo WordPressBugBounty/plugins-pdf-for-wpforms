@@ -552,13 +552,6 @@ class Yeepdf_Settings_Builder_PDF_Backend {
             }
         }   
     }
-    function remove_view_action(){
-        global $post_type;
-        if ( 'yeepdf' === $post_type ) {
-            unset( $actions['view'] );
-        }
-        return $actions;
-    }
     function remove_permalink($link){
         global $post_type;
         if ( 'yeepdf' === $post_type ) {

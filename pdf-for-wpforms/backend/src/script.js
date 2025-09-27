@@ -84,10 +84,8 @@
                 }
             },
             builder_to_json: function(){ 
-                var font_family = $(".email-builder-main").css("font-family").replaceAll('"',"");
-                if(font_family == ""){
-                    font_family = 'dejavu sans';
-                }
+                //var font_family = $(".email-builder-main").css("font-family").replaceAll('"',"");
+                var font_family = getInlineFont(".email-builder-main");
                 var datas = {}; 
                 var container = $(".email-builder-main");
                 datas['container'] = {
@@ -570,6 +568,14 @@
               $(tab_id).addClass("hidden");
           }
       }) 
+      function getInlineFont(el) {
+        var fontFamily = $(el).prop("style").fontFamily || "";
+        if (fontFamily) {
+            fontFamily = fontFamily.replaceAll('"', '').trim();
+            return fontFamily.split(",")[0].trim();
+        }
+        return "dejavu sans";
+      }
       //custom JS for add-ons
       $("body").on("change1",".builder__editor--item-detail-template input, .builder__editor--item-detail-template select",function(e){
           var template = $(".builder__editor--item-detail-template .detail-template").val();

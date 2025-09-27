@@ -463,22 +463,6 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend {
 				}else{
 					$save_dropbox = false;
 		    	}
-		    	if (preg_match('/\[yeepdf_images(?:\s+width="(\d+)")?(?:\s+height="(\d+)")?\](.*?)\[\/yeepdf_images\]/', $message, $matches)) {
-		    		$width = !empty($matches[1]) ? $matches[1] : "auto"; 
-    				$height = !empty($matches[2]) ? $matches[2] : "auto";
-				    $imageUrls = explode(",", $matches[3]);
-					if(is_numeric($height) ){
-						$height .= "px";
-					}
-					if(is_numeric($width) ){
-						$width .= "px";
-					}
-				    $imagesHtml = "";
-				    foreach ($imageUrls as $url) {
-				        $imagesHtml .= "<img src='$url' width='$width' height='$height' > ";
-				    }
-				    $message = str_replace($matches[0], $imagesHtml, $message);
-				}
 				$data_send_settings_download = array(
 					"id_template"=> $template_id,
 					"type"=> "upload",
