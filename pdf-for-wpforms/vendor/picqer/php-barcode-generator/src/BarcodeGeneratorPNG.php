@@ -11,9 +11,6 @@ class BarcodeGeneratorPNG extends BarcodeGenerator
 {
     protected $useImagick = true;
 
-    /**
-     * @throws BarcodeException
-     */
     public function __construct()
     {
         // Auto switch between GD and Imagick based on what is installed
@@ -46,13 +43,13 @@ class BarcodeGeneratorPNG extends BarcodeGenerator
      * Return a PNG image representation of barcode (requires GD or Imagick library).
      *
      * @param string $barcode code to print
-     * @param BarcodeGenerator::TYPE_* $type (string) type of barcode
+     * @param string $type type of barcode:
      * @param int $widthFactor Width of a single bar element in pixels.
      * @param int $height Height of a single bar element in pixels.
      * @param array $foregroundColor RGB (0-255) foreground color for bar elements (background is transparent).
      * @return string image data or false in case of error.
      */
-    public function getBarcode(string $barcode, $type, int $widthFactor = 2, int $height = 30, array $foregroundColor = [0, 0, 0]): string
+    public function getBarcode($barcode, $type, int $widthFactor = 2, int $height = 30, array $foregroundColor = [0, 0, 0])
     {
         $barcodeData = $this->getBarcodeData($barcode, $type);
         $width = round($barcodeData->getWidth() * $widthFactor);
@@ -77,9 +74,9 @@ class BarcodeGeneratorPNG extends BarcodeGenerator
 
                 // draw a vertical bar
                 if ($this->useImagick && isset($imagickBarsShape)) {
-                    $imagickBarsShape->rectangle($positionHorizontal, $y, ($positionHorizontal + $barWidth - 1), ($y + $barHeight));
+                    $imagickBarsShape->rectangle($positionHorizontal, $y, ($positionHorizontal + $barWidth), ($y + $barHeight));
                 } else {
-                    imagefilledrectangle($image, $positionHorizontal, $y, ($positionHorizontal + $barWidth - 1), ($y + $barHeight), $gdForegroundColor);
+                    imagefilledrectangle($image, $positionHorizontal, $y, ($positionHorizontal + $barWidth) - 1, ($y + $barHeight), $gdForegroundColor);
                 }
             }
             $positionHorizontal += $barWidth;

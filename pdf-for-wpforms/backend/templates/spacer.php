@@ -6,7 +6,7 @@ function superaddons_pdf_builder_block_spacer(){
     <li>
         <div class="momongaDraggable" data-type="spacer">
             <i class="dashicons dashicons-image-flip-vertical"></i>
-            <div class="yeepdf-tool-text"><?php esc_html_e("Spacer","pdf-for-wpforms") ?></div>
+            <div class="yeepdf-tool-text"><?php esc_html_e("Spacer",'pdf-for-woocommerce') ?></div>
         </div>
     </li>
     <?php

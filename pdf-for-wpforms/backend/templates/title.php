@@ -6,7 +6,7 @@ function yeepdf_builder_block_title(){
 	<li data-type="title">
 		<div class="momongaDraggable">
             <i class="dashicons dashicons-heading"></i>
-            <div class="yeepdf-tool-text"><?php esc_html_e("Title","yeepdf") ?></div>
+            <div class="yeepdf-tool-text"><?php esc_html_e("Title","pdf-for-woocommerce") ?></div>
         </div>
     </li>
 	<?php

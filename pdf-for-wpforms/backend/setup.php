@@ -15,17 +15,17 @@ class Yeepdf_Setup_Template {
             <input type="hidden" id="yeepdf-setup-type" value="<?php echo esc_attr($type) ?>">
             <div id="yeepdf-setup-template" style="display:none">
                 <div class="yeepdf-setup-container">
-                    <div class="yeepdf-setup-title">
+                    <div class='pdf-for-woocommerce'>
                         <div class="yeepdf-setup-title-text">
-                            <?php esc_attr_e("Name Your Template","yeepdf-setup-title") ?>
+                            <?php esc_attr_e("Name Your Template",'pdf-for-woocommerce') ?>
                         </div>
                         <div class="yeepdf-setup-title-input">
                             <input id="yeepdf-setup-form-title" type="text" placeholder="Enter your template name here…" name="">
                         </div>
                     </div>
-                    <div class="yeepdf-setup-title">
+                    <div class='pdf-for-woocommerce'>
                         <div class="yeepdf-setup-title-text">
-                            <?php esc_html_e("Select a Form","yeepdf-setup-title") ?>
+                            <?php esc_html_e("Select a Form",'pdf-for-woocommerce') ?>
                         </div>
                         <div class="yeepdf-setup-title-input">
                             <?php

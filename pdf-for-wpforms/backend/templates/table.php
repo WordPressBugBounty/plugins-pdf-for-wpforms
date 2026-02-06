@@ -12,7 +12,7 @@ class Yeepdf_Creator_Table_Builder {
         <li>
             <div class="momongaDraggable pro_disable" data-type="table" title=" Pro Version" >
                 <i class="dashicons dashicons-editor-table"></i>
-                <div class="yeepdf-tool-text"><?php esc_html_e("Table","pdf-for-wpforms") ?></div>
+                <div class="yeepdf-tool-text"><?php esc_html_e("Table",'pdf-for-woocommerce') ?></div>
             </div>
         </li>
     <?php
@@ -110,12 +110,12 @@ class Yeepdf_Creator_Table_Builder {
         ?>
         <div class="builder__editor--item builder__editor--item-table">
             <div class="builder__editor--html">
-                <label><?php esc_html_e("Table","pdf-for-wpforms") ?></label>
+                <label><?php esc_html_e("Table",'pdf-for-woocommerce') ?></label>
                 <div class="yeepdf_setting_group">
                     <div class="yeepdf_setting_row">
                         <!-- Layout
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Layout","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Layout",'pdf-for-woocommerce') ?></label>
                             <div class="yeepdf_setting_input-wrapper">
                                 <select name="yeepdf_name[]" class="yeepdf_setting_input yeepdf_setting_input_layout">
                                     <option value="fixed">fixed</option>
@@ -125,13 +125,13 @@ class Yeepdf_Creator_Table_Builder {
                         </div>
                         -->
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Columns","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Columns",'pdf-for-woocommerce') ?></label>
                             <div title="Columns" class="setting_input-wrapper">
                                 <input name="yeepdf_name[]" class="yeepdf_setting_input yeepdf_setting_input_col" max="100" step="1" type="number">
                             </div>
                         </div>
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Rows","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Rows",'pdf-for-woocommerce') ?></label>
                             <div title="Rows" class="setting_input-wrapper">
                                 <input name="yeepdf_name[]" class="yeepdf_setting_input yeepdf_setting_input_row" step="1" min="1" type="number" >
                             </div>
@@ -139,16 +139,16 @@ class Yeepdf_Creator_Table_Builder {
                     </div>
                 </div>
                 <div class="yeepdf_setting_group">
-                    <div class="yeepdf_check"><?php esc_html_e("Header","pdf-for-wpforms") ?></div>
+                    <div class="yeepdf_check"><?php esc_html_e("Header",'pdf-for-woocommerce') ?></div>
                     <div class="yeepdf_setting_row">
                         <div class="settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("BG Color","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("BG Color",'pdf-for-woocommerce') ?></label>
                             <div class="setting_input-wrapper">
                                 <input name="yeepdf_name[]" type="text" value="" class="builder__editor_color yeepdf_setting_input_header_bg">
                             </div>
                         </div>
                         <div class="settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Text Color","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Text Color",'pdf-for-woocommerce') ?></label>
                             <div class="yeepdf_setting_input-wrapper">
                                 <input name="yeepdf_name[]" type="text" value="" class="builder__editor_color yeepdf_setting_input_header_color">
                             </div>
@@ -157,17 +157,17 @@ class Yeepdf_Creator_Table_Builder {
                 </div>
                 <div class="yeepdf_setting_group">
                     <div class="yeepdf_div-block-25">
-                        <div class="yeepdf_check"><?php esc_html_e("ROWS","pdf-for-wpforms") ?></div>
+                        <div class="yeepdf_check"><?php esc_html_e("ROWS",'pdf-for-woocommerce') ?></div>
                     </div>
                     <div class="yeepdf_setting_row">
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("BG Color (even)","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("BG Color (even)",'pdf-for-woocommerce') ?></label>
                             <div class="setting_input-wrapper">
                                 <input name="yeepdf_name[]" type="text" value="" class="builder__editor_color yeepdf_setting_input_even_bg">
                             </div>
                         </div>
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Text Color (even)","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Text Color (even)",'pdf-for-woocommerce') ?></label>
                             <div class="yeepdf_setting_input-wrapper">
                                 <input name="yeepdf_name[]" type="text" value="" class="builder__editor_color yeepdf_setting_input_even_color">
                             </div>
@@ -175,13 +175,13 @@ class Yeepdf_Creator_Table_Builder {
                     </div>
                     <div data-element="stripe-styles" class="yeepdf_setting_row is-stripes" style="display: flex;">
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("BG Color (odd)","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("BG Color (odd)",'pdf-for-woocommerce') ?></label>
                             <div class="setting_input-wrapper">
                                 <input name="yeepdf_name[]" type="text" value="" class="builder__editor_color yeepdf_setting_input_odd_bg">
                             </div>
                         </div>
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Text Color (odd)","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Text Color (odd)",'pdf-for-woocommerce') ?></label>
                             <div class="setting_input-wrapper">
                                 <input name="yeepdf_name[]" type="text" value="" class="builder__editor_color yeepdf_setting_input_odd_color">
                             </div>
@@ -189,16 +189,16 @@ class Yeepdf_Creator_Table_Builder {
                     </div>
                 </div>
                 <div class="yeepdf_setting_group">
-                    <div class="check"><?php esc_html_e("Borders","pdf-for-wpforms") ?></div>
+                    <div class="check"><?php esc_html_e("Borders",'pdf-for-woocommerce') ?></div>
                     <div class="yeepdf_setting_row">
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Color","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Color",'pdf-for-woocommerce') ?></label>
                             <div class="setting_input-wrapper">
                                 <input name="yeepdf_name[]" type="text" value="" class="builder__editor_color yeepdf_setting_input_tb_border_color">
                             </div>
                         </div>
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Style","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Style",'pdf-for-woocommerce') ?></label>
                             <div class="yeepdf_setting_input-wrapper">
                                 <select name="yeepdf_name[]" class="yeepdf_setting_input yeepdf_setting_input_tb_border_style">
                                     <option value="solid">solid</option>
@@ -216,13 +216,13 @@ class Yeepdf_Creator_Table_Builder {
                     </div>
                     <div class="yeepdf_setting_row">
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Width","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Width",'pdf-for-woocommerce') ?></label>
                             <div class="yeepdf_setting_input-wrapper">
                                 <input name="yeepdf_name[]" class="setting_input yeepdf_setting_input_tb_border_width" step="1" type="number" data-after_value="px">
                             </div>
                         </div>
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Collapse","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Collapse",'pdf-for-woocommerce') ?></label>
                             <div class="setting_input-wrapper">
                                 <select name="yeepdf_name[]" class="yeepdf_setting_input yeepdf_setting_input_tb_border_collapse">
                                     <option value="collapse">collapse</option>
@@ -233,10 +233,10 @@ class Yeepdf_Creator_Table_Builder {
                     </div>
                 </div>
                 <div class="yeepdf_setting_group">
-                    <div class="check"><?php esc_html_e("Cells","pdf-for-wpforms") ?></div>
+                    <div class="check"><?php esc_html_e("Cells",'pdf-for-woocommerce') ?></div>
                     <div class="yeepdf_setting_row">
                         <div class="yeepdf_settings_group-wrapper">
-                            <label for="cell-text-align-dropdown" class="yeepdf_checkbox_label"><?php esc_html_e("Text Align","pdf-for-wpforms") ?></label>
+                            <label for="cell-text-align-dropdown" class="yeepdf_checkbox_label"><?php esc_html_e("Text Align",'pdf-for-woocommerce') ?></label>
                             <div class="yeepdf_setting_input-wrapper">
                                 <select name="yeepdf_name[]" class="yeepdf_setting_input yeepdf_setting_input_cell_ta">
                                     <option value="left">left</option>
@@ -246,7 +246,7 @@ class Yeepdf_Creator_Table_Builder {
                             </div>
                         </div>
                         <div class="yeepdf_settings_group-wrapper">
-                            <label for="cell-padding-input" class="yeepdf_checkbox_label"><?php esc_html_e("Padding","pdf-for-wpforms") ?></label>
+                            <label for="cell-padding-input" class="yeepdf_checkbox_label"><?php esc_html_e("Padding",'pdf-for-woocommerce') ?></label>
                             <div class="yeepdf_setting_input-wrapper">
                                 <input name="yeepdf_name[]" class="yeepdf_setting_input yeepdf_setting_input_cell_padding"step="1" type="number" data-after_value="px">
                             </div>

@@ -6,7 +6,7 @@ function yeepdf_builder_block__main_templates(){
     <div class="builder__widget--inner">
         <div class="builder__widget_tab builder__widget_templates">
             <div class="builder__widget_tab_title"><span
-                    class="builder__widget_tab_title_t"><?php esc_attr_e( "Templates", "yeepdf") ?></span><span
+                    class="builder__widget_tab_title_t"><?php esc_attr_e( "Templates", "pdf-for-woocommerce") ?></span><span
                     class="builder__widget_tab_title_icon dashicons dashicons-arrow-down-alt2"></span><span
                     class="builder__widget_tab_title_icon dashicons dashicons-arrow-up-alt2"></span>
             </div>

@@ -28,25 +28,23 @@ class Yeepdf_Create_PDF
 	{
 		if (isset($data_send_settings_download['html']) && $data_send_settings_download['html'] != "") {
 			$message = $data_send_settings_download['html'];
-			if (preg_match('/\[yeepdf_images(?:\s+width="([^"]+)")?(?:\s+height="([^"]+)")?\](.*?)\[\/yeepdf_images\]/s', $message, $matches)) {
-				$width  = !empty($matches[1]) ? trim($matches[1]) : "auto";
-				$height = !empty($matches[2]) ? trim($matches[2]) : "auto";
-				if (is_numeric($height)) {
-					$height .= "px";
-				}
-				if (is_numeric($width)) {
-					$width .= "px";
-				}
-				$imageUrls = preg_split('/\s+|<br\s*\/?>|,/', trim($matches[3]));
-				$imageUrls = array_filter($imageUrls);
-				$imagesHtml = "";
-				foreach ($imageUrls as $url) {
-					$url = trim($url);
-					if (!empty($url)) {
-						$imagesHtml .= "<img src='$url' width='$width' height='$height' > ";
+			if (preg_match_all('/\[yeepdf_images(?:\s+width="([^"]+)")?(?:\s+height="([^"]+)")?\](.*?)\[\/yeepdf_images\]/s', $message, $matches, PREG_SET_ORDER)) {
+				foreach ($matches as $match) {
+					$width  = !empty($match[1]) ? trim($match[1]) : "auto";
+					$height = !empty($match[2]) ? trim($match[2]) : "auto";
+					if (is_numeric($height)) $height .= "px";
+					if (is_numeric($width))  $width  .= "px";
+					$imageUrls = preg_split('/\s+|<br\s*\/?>|,/', trim($match[3]));
+					$imageUrls = array_filter($imageUrls);
+					$imagesHtml = "";
+					foreach ($imageUrls as $url) {
+						$url = trim($url);
+						if (!empty($url)) {
+							$imagesHtml .= "<img src='$url' width='$width' height='$height' > ";
+						}
 					}
+					$message = str_replace($match[0], $imagesHtml, $message);
 				}
-				$message = str_replace($matches[0], $imagesHtml, $message);
 				$data_send_settings_download["html"] = $message;
 			}
 		}
@@ -291,38 +289,31 @@ class Yeepdf_Create_PDF
 		if (ob_get_length() > 0) {
 			ob_clean();
 		}
-		$imgExt = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+		preg_match_all('/<img[^>]+src=["\']([^"\']+)["\']/', $html, $matches);
 		$imgExt = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
 		$html = preg_replace_callback(
-			// Regex to match image URLs inside HTML
-			'/https?:\/\/[^\s"\']+\.(?:' . implode('|', $imgExt) . ')/i',
+			'/<img[^>]+src=["\']([^"\']+\.(?:' . implode('|', $imgExt) . '))["\'][^>]*>/i',
 			function ($m) use ($imgExt) {
-				$url = $m[0];
+				$url = $m[1];
 				$parsed = wp_parse_url($url);
-				// If URL cannot be parsed, return as is
-				if (! $parsed || empty($parsed['path'])) {
-					return $url;
+				if (!$parsed || empty($parsed['path'])) {
+					return $m[0];
 				}
-				// Check file extension
 				$ext = strtolower(pathinfo($parsed['path'], PATHINFO_EXTENSION));
-				if (! in_array($ext, $imgExt, true)) {
-					return $url;
+				if (!in_array($ext, $imgExt, true)) {
+					return $m[0];
 				}
-				// Get site host
 				$site_host = wp_parse_url(home_url(), PHP_URL_HOST);
 				$url_host  = isset($parsed['host']) ? $parsed['host'] : '';
-				// If the image is hosted on the same domain
 				if ($url_host === $site_host) {
 					$upload_dir = wp_get_upload_dir();
-					// Check if the URL is inside uploads directory
 					if (str_starts_with($url, $upload_dir['baseurl'])) {
-						// Convert to physical path
 						$relative = str_replace($upload_dir['baseurl'], '', $url);
-						return $upload_dir['basedir'] . $relative;
+						$local_path = $upload_dir['basedir'] . $relative;
+						return str_replace($url, $local_path, $m[0]);
 					}
 				}
-				// External image → keep original URL
-				return $url;
+				return $m[0];
 			},
 			$html
 		);
@@ -352,7 +343,7 @@ class Yeepdf_Create_PDF
 				$path_name = $upload_dir["path"] . $data_attrs["name"] . ".pdf";
 				$url_name  = $upload_dir["url"] . $data_attrs["name"] . ".pdf";
 				if (file_exists($path_name)) {
-					unlink($path_name);
+					wp_delete_file($path_name);
 				}
 				$mpdf->WriteHTML($html);
 				$output = $mpdf->Output($path_name, "F");
@@ -373,6 +364,7 @@ class Yeepdf_Create_PDF
 			default:
 				//preview
 				$html = str_replace("data---image", "data:image", $html);
+				
 				$html = apply_filters("yeepdf_output_html", $html, $data_attrs);
 				$mpdf->WriteHTML($html);
 				$mpdf->Output($data_attrs["name"] . ".pdf", "I");
@@ -383,7 +375,11 @@ class Yeepdf_Create_PDF
 	{
 		$html = "";
 		$data_json = get_post_meta($id_template, 'data_email', true);
-		$data_json = json_decode($data_json, true);
+		if(is_array($data_json)){
+			$data_json = $data_json;
+		}else{
+			$data_json = json_decode($data_json, true);
+		}
 		if (!$data_json) {
 			return;
 		}
@@ -467,7 +463,7 @@ class Yeepdf_Create_PDF
 					if ($show_row) {
 				?>
 						<div class="container-row" style="width:100%;">
-							<div class="row" style="<?php echo ($row_style); ?>">
+							<div class="row" style="<?php echo ($row_style); // phpcs:ignore WordPress.Security.EscapeOutput ?>">
 								<?php
 								$i = 0;
 								foreach ($row_columns as $column) {
@@ -594,7 +590,7 @@ class Yeepdf_Create_PDF
 						case "qrcode":
 							if ($k == "html_hide") {
 								$html_el->find($key, 0)->removeClass('hidden');
-								$html_el->find($key, 0)->innertext = '<div class="text-content"><img class="qrcode" src="[yeepdf_qrcode_new]' . strip_tags($v) . '[/yeepdf_qrcode_new]" /></div>';
+								$html_el->find($key, 0)->innertext = '<div class="text-content"><img class="qrcode" src="[yeepdf_qrcode_new]' . wp_strip_all_tags($v) . '[/yeepdf_qrcode_new]" /></div>';
 							} elseif ($k == "html" || $k == "html_not_change") {
 								$html_el->find($key, 0)->remove();
 							} else {
@@ -604,7 +600,7 @@ class Yeepdf_Create_PDF
 						case "barcode":
 							if ($k == "html_hide") {
 								$html_el->find($key, 0)->removeClass('hidden');
-								$html_el->find($key, 0)->innertext = '<div class="text-content"><img src="[yeepdf_barcode_new]' . strip_tags($v) . '[/yeepdf_barcode_new]" /></div>';
+								$html_el->find($key, 0)->innertext = '<div class="text-content"><img src="[yeepdf_barcode_new]' . wp_strip_all_tags($v) . '[/yeepdf_barcode_new]" /></div>';
 							} elseif ($k == "html" || $k == "html_not_change") {
 								$html_el->find($key, 0)->remove();
 							} else {
@@ -650,7 +646,7 @@ class Yeepdf_Create_PDF
 									$options .= '<option value="' . $v_o["value"] . '">' . $v_o["text"] . '</option>';
 								}
 								$html_el->find("select", 0)->__set("innertext", $options);
-								$name = "yeepdf_select_" . rand(1000, 999999);
+								$name = "yeepdf_select_" . wp_rand(1000, 999999);
 								$html_el->find("select", 0)->setAttribute("name", $name);
 							} else {
 								$html_el->find($key, 0)->__set("innertext", $v);
@@ -660,7 +656,7 @@ class Yeepdf_Create_PDF
 							if ($k == "value_checkbox") {
 								$checkbox = '';
 								foreach ($v as $k_o => $v_o) {
-									$name = rand(1000, 999999);
+									$name = wp_rand(1000, 999999);
 									$checkbox .= ' <input name="yeeaddons_checkbox_' . $name . '" type="checkbox" value="' . $v_o["value"] . '" /> ' . $v_o["text"];
 								}
 								$html_el->find($key, 0)->__set("innertext", $checkbox);
@@ -671,7 +667,7 @@ class Yeepdf_Create_PDF
 						case "form_radio":
 							if ($k == "value_radio") {
 								$checkbox = '';
-								$name = rand(1000, 999999);
+								$name = wp_rand(1000, 999999);
 								foreach ($v as $k_o => $v_o) {
 									$checkbox .= ' <input name="yeeaddons_radio_' . $name . '" type="radio" value="' . $v_o["value"] . '" /> ' . $v_o["text"];
 								}
@@ -682,7 +678,7 @@ class Yeepdf_Create_PDF
 							break;
 						case "form_text":
 							if ($k == "value") {
-								$name = "yeepdf_text_" . rand(1000, 999999);
+								$name = "yeepdf_text_" . wp_rand(1000, 999999);
 								$html_el->find("input", 0)->setAttribute("name", $name);
 								$html_el->find("input", 0)->setAttribute("value", $v);
 							} else {
@@ -692,7 +688,7 @@ class Yeepdf_Create_PDF
 						case "form_textarea":
 							if ($k == "text") {
 								$html_el->find($key, 0)->innertext = $v;
-								$name = "yeepdf_textarea_" . rand(1000, 999999);
+								$name = "yeepdf_textarea_" . wp_rand(1000, 999999);
 								$html_el->find("textarea", 0)->setAttribute("name", $name);
 							} else {
 								$html_el->find($key, 0)->__set("innertext", $v);

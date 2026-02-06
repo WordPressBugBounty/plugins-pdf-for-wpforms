@@ -6,7 +6,7 @@ function yeepdf_builder_block_img_box(){
 	<li data-type="img_box">
 		<div class="momongaDraggable">
             <i class="dashicons dashicons-id"></i>
-            <div class="yeepdf-tool-text"><?php esc_html_e("Image Box","yeepdf") ?></div>
+            <div class="yeepdf-tool-text"><?php esc_html_e("Image Box","pdf-for-woocommerce") ?></div>
         </div>
     </li>
 	<?php

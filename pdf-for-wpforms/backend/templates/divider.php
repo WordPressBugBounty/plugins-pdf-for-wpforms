@@ -6,7 +6,7 @@ function superaddons_pdf_builder_block_divider(){
     <li>
         <div class="momongaDraggable" data-type="divider">
             <i class="dashicons dashicons-minus"></i>
-            <div class="yeepdf-tool-text"><?php esc_html_e("Divider","pdf-for-wpforms") ?></div>
+            <div class="yeepdf-tool-text"><?php esc_html_e("Divider",'pdf-for-woocommerce') ?></div>
         </div>
     </li>
     <?php

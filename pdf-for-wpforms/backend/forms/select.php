@@ -10,13 +10,13 @@ class Yeepdf_Settings_Builder_PDF_Forms_Select {
         <li>
             <div class="momongaDraggable" data-type="form_select">
                 <i class="dashicons dashicons-list-view"></i>
-                <div class="yeepdf-tool-text"><?php esc_html_e("Select","pdf-for-wpforms") ?></div>
+                <div class="yeepdf-tool-text"><?php esc_html_e("Select",'pdf-for-woocommerce') ?></div>
             </div>
         </li>
         <?php
     }
     function add_input_text_settings($type){
-        $rand_name = rand(10000,9999999);
+        $rand_name = wp_rand(10000,9999999);
         $type["block"]["form_select"]["builder"] = '
         <div class="builder-elements">
             <div class="builder-elements-content" data-type="form_select">

@@ -1,5 +1,5 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /*
  * PHP QR Code encoder
  *
@@ -185,7 +185,7 @@
                 $eccLevel = $mode[1];
             }
                 
-            $qrTab = QRcode::text($code, false, $eccLevel);
+            $qrTab = Yeekitqrcode::text($code, false, $eccLevel);
             $size = count($qrTab);
                 
             $barcode_array['num_rows'] = $size;
@@ -2969,7 +2969,7 @@
 
     //##########################################################################
     
-    class QRcode {
+    class Yeekitqrcode {
     
         public $version;
         public $width;
@@ -3261,7 +3261,7 @@
         //----------------------------------------------------------------------
         public function encodeRAW($intext, $outfile = false) 
         {
-            $code = new QRcode();
+            $code = new Yeekitqrcode();
 
             if($this->eightbit) {
                 $code->encodeString8bit($intext, $this->version, $this->level);
@@ -3275,7 +3275,7 @@
         //----------------------------------------------------------------------
         public function encode($intext, $outfile = false) 
         {
-            $code = new QRcode();
+            $code = new Yeekitqrcode();
 
             if($this->eightbit) {
                 $code->encodeString8bit($intext, $this->version, $this->level);

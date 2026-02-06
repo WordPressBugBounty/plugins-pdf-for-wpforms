@@ -10,7 +10,7 @@ class Yeepdf_Settings_Builder_PDF_Forms_Radio {
         <li>
             <div class="momongaDraggable" data-type="form_radio">
                 <i class="dashicons dashicons-marker"></i>
-                <div class="yeepdf-tool-text"><?php esc_html_e("Radio","pdf-for-wpforms") ?></div>
+                <div class="yeepdf-tool-text"><?php esc_html_e("Radio",'pdf-for-woocommerce') ?></div>
             </div>
         </li>
         <?php

@@ -6,7 +6,7 @@ function superaddons_pdf_builder_block_signature(){
     <li>
         <div class="momongaDraggable pro_disable" title=" Pro Version" data-type="signature">
             <i class="dashicons dashicons-admin-customizer"></i>
-            <div class="yeepdf-tool-text"><?php esc_html_e("Signature","pdf-for-wpforms") ?></div>
+            <div class="yeepdf-tool-text"><?php esc_html_e("Signature",'pdf-for-woocommerce') ?></div>
         </div>
     </li>
     <?php

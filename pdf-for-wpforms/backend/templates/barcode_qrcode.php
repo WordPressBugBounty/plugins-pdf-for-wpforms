@@ -11,20 +11,20 @@ class Superaddons_Pdf_Shortcode_Qrcode {
         <li>
             <div class="momongaDraggable pro_disable" data-type="barcode" title="Pro Version">
                 <i class="pdf-creator-icon icon-barcode"></i>
-                <div class="yeepdf-tool-text"><?php esc_html_e("Barcode","pdf-for-wpforms") ?></div>
+                <div class="yeepdf-tool-text"><?php esc_html_e("Barcode",'pdf-for-woocommerce') ?></div>
             </div>
         </li>
         <li>
             <div class="momongaDraggable pro_disable" data-type="qrcode" title="Pro Version">
                 <i class="pdf-creator-icon icon-qrcode"></i>
-                <div class="yeepdf-tool-text"><?php esc_html_e("Qrcode","pdf-for-wpforms") ?></div>
+                <div class="yeepdf-tool-text"><?php esc_html_e("Qrcode",'pdf-for-woocommerce') ?></div>
             </div>
         </li>
         <?php
     }
     function barcode_qrcode_builder($type){
         $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
-        $img_qr = QRcode::png('text qrcode','*');
+        $img_qr = Yeekitqrcode::png('text qrcode','*');
         $img = base64_encode($generator->getBarcode("text barcode", $generator::TYPE_CODE_128));
         $type["block"]["barcode"]["builder"] = '
             <div class="builder-elements">

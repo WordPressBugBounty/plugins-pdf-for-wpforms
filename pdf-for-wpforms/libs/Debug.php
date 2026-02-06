@@ -1,4 +1,6 @@
-<?php namespace simplehtmldom;
+<?php 
+namespace simplehtmldom;
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * Implements functions for debugging purposes. Debugging can be enabled and

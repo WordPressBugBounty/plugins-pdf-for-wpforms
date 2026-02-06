@@ -1440,11 +1440,11 @@ table.rc-table-resizing thead > th > a {
     font-size: 20px;
     font-weight: 600;
     min-width: 200px;
-    padding: 0;
+    padding: 15px 30px;
 }
 .yeepdf-setup-title-input {
   width: 100%;
-  padding: 0 50px;
+  padding: 0 0px;
 }
 .yeepdf-setup-title-input input, .yeepdf-setup-title-input select {
     display: inline-block;

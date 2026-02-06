@@ -6,7 +6,7 @@ function superaddons_pdf_builder_block_text(){
     <li>
         <div class="momongaDraggable" data-type="text">
             <i class="pdf-creator-icon icon-text-height"></i>
-            <div class="yeepdf-tool-text"><?php esc_html_e("Text/HTML","pdf-for-wpforms") ?></div>
+            <div class="yeepdf-tool-text"><?php esc_html_e("Text/HTML",'pdf-for-woocommerce') ?></div>
         </div>
     </li>
     <?php

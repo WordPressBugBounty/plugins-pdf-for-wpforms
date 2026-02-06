@@ -10,7 +10,7 @@ class Yeepdf_Settings_Builder_PDF_Forms_Checkbox {
         <li>
             <div class="momongaDraggable" data-type="form_checkbox">
                 <i class="dashicons dashicons-yes-alt"></i>
-                <div class="yeepdf-tool-text"><?php esc_html_e("Checkbox","pdf-for-wpforms") ?></div>
+                <div class="yeepdf-tool-text"><?php esc_html_e("Checkbox",'pdf-for-woocommerce') ?></div>
             </div>
         </li>
         <?php

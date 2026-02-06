@@ -106,7 +106,7 @@ class Yeepdf_Builder_PDF_Shortcode {
 				return wp_date(get_option('date_format'));
 				break;
 			case "yeepdf_random_number":
-				return rand(10000,9999999);
+				return wp_rand(10000,9999999);
 				break;
 			case "yeepdf_current_time":
 				return wp_date(get_option('time_format'));
@@ -131,10 +131,10 @@ class Yeepdf_Builder_PDF_Shortcode {
 				return $current_user->display_name;
 				break;
 			case "yeepdf_user_login_url":
-				return '<a href="' . wp_login_url() . '"> '.esc_html__('Log in', "pdf-for-wpforms").' </a>';
+				return '<a href="' . wp_login_url() . '"> '.esc_html__('Log in', 'pdf-for-woocommerce').' </a>';
 				break;
 			case "yeepdf_user_logout_url":
-				return '<a href="' . wp_logout_url( home_url()) . '"> '.esc_html__('Log in', "pdf-for-wpforms").' </a>';
+				return '<a href="' . wp_logout_url( home_url()) . '"> '.esc_html__('Log in', 'pdf-for-woocommerce').' </a>';
 				break;
 			case "yeepdf_dotab":
 				$atts = shortcode_atts( array(
@@ -187,7 +187,7 @@ class Yeepdf_Builder_PDF_Shortcode {
 		}	
 		$content = do_shortcode($content);
 		$content = wp_strip_all_tags($content);
-		$img_qr = QRcode::png($content,'*');
+		$img_qr = Yeekitqrcode::png($content,'*');
 		return '<div class="text-content"><img class="qrcode" src="data:image/png;base64,'.$img_qr.'"></div>';
 	}
 	function shortcode_qrcode_new($atts, $content= "Change Text"){
@@ -195,7 +195,7 @@ class Yeepdf_Builder_PDF_Shortcode {
 			$content ="Change Text";
 		}	
 		$content = do_shortcode($content);
-		$img_qr = QRcode::png($content,'*');
+		$img_qr = Yeekitqrcode::png($content,'*');
 		return 'data---image/png;base64,'.$img_qr;
 	}
 	function shortcode_barcode($atts, $content= "Change Text"){

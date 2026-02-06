@@ -11,7 +11,7 @@ class Yeepdf_Settings_Builder_PDF_Forms_Backend {
         ?>
         <div class="builder__widget--inner">
             <div class="builder__widget_tab builder__widget_genaral">
-                <div class="builder__widget_tab_title"><span class="builder__widget_tab_title_t"><?php esc_attr_e( "Forms", "yeepdf") ?></span><span
+                <div class="builder__widget_tab_title"><span class="builder__widget_tab_title_t"><?php esc_attr_e( "Forms", "pdf-for-woocommerce") ?></span><span
                         class="builder__widget_tab_title_icon dashicons dashicons-arrow-down-alt2"></span><span
                         class="builder__widget_tab_title_icon dashicons dashicons-arrow-up-alt2"></span>
                 </div>
@@ -27,7 +27,7 @@ class Yeepdf_Settings_Builder_PDF_Forms_Backend {
         <li>
             <div class="momongaDraggable" data-type="form_text">
                 <i class="dashicons dashicons-editor-textcolor"></i>
-                <div class="yeepdf-tool-text"><?php esc_html_e("Text Input","pdf-for-wpforms") ?></div>
+                <div class="yeepdf-tool-text"><?php esc_html_e("Text Input",'pdf-for-woocommerce') ?></div>
             </div>
         </li>
         <?php
@@ -59,17 +59,17 @@ class Yeepdf_Settings_Builder_PDF_Forms_Backend {
         ?>
         <div class="builder__editor--item builder__editor--item-form_label">
             <div class="builder__editor--html">
-                <label><?php esc_html_e("Label","pdf-for-wpforms") ?></label>
+                <label><?php esc_html_e("Label",'pdf-for-woocommerce') ?></label>
                 <div class="yeepdf_setting_group">
                     <div class="yeepdf_setting_row">
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Before text","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Before text",'pdf-for-woocommerce') ?></label>
                             <div class="setting_input-wrapper">
                                 <input name="yeepdf_name[]" class="yeepdf_setting_input yeepdf_setting_form_before_label"  type="text" >
                             </div>
                         </div>
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("After text","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("After text",'pdf-for-woocommerce') ?></label>
                             <div class="setting_input-wrapper">
                                 <input name="yeepdf_name[]" class="yeepdf_setting_input yeepdf_setting_form_after_label"  type="text" >
                             </div>
@@ -80,11 +80,11 @@ class Yeepdf_Settings_Builder_PDF_Forms_Backend {
         </div>
         <div class="builder__editor--item builder__editor--item-form_default_val">
             <div class="builder__editor--html">
-                <label><?php esc_html_e("Default Value","pdf-for-wpforms") ?></label>
+                <label><?php esc_html_e("Default Value",'pdf-for-woocommerce') ?></label>
                 <div class="yeepdf_setting_group">
                     <div class="yeepdf_setting_row">
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Value","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Value",'pdf-for-woocommerce') ?></label>
                             <div class="setting_input-wrapper">
                                 <input name="yeepdf_name[]" class="yeepdf_setting_input yeepdf_setting_form_default"  type="text" >
                             </div>
@@ -95,11 +95,11 @@ class Yeepdf_Settings_Builder_PDF_Forms_Backend {
         </div>
         <div class="builder__editor--item builder__editor--item-form_default_select">
             <div class="builder__editor--html">
-                <label><?php esc_html_e("Value","pdf-for-wpforms") ?></label>
+                <label><?php esc_html_e("Value",'pdf-for-woocommerce') ?></label>
                 <div class="yeepdf_setting_group">
                     <div class="yeepdf_setting_row">
                         <div class="yeepdf_settings_group-wrapper">
-                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Value","pdf-for-wpforms") ?></label>
+                            <label class="yeepdf_checkbox_label"><?php esc_html_e("Value",'pdf-for-woocommerce') ?></label>
                             <div class="setting_input-wrapper">
                                 <textarea name="yeepdf_name[]" class="yeepdf_setting_input yeepdf_setting_form_default_value" ></textarea>
                             </div>

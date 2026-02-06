@@ -6,7 +6,7 @@ function superaddons_pdf_builder_block_break_point(){
     <li>
         <div class="momongaDraggable pro_disable" data-type="break" title=" Pro Version">
             <i class="dashicons dashicons-editor-break"></i>
-            <div class="yeepdf-tool-text"><?php esc_html_e("Page Break","pdf-for-wpforms") ?></div>
+            <div class="yeepdf-tool-text"><?php esc_html_e("Page Break",'pdf-for-woocommerce') ?></div>
         </div>
     </li>
     <?php

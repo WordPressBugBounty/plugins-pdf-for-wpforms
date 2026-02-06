@@ -6,7 +6,7 @@ function superaddons_pdf_builder_block_rote(){
     <li>
         <div class="momongaDraggable pro_disable" data-type="rotate" title=" Pro Version">
             <i class="dashicons dashicons-image-rotate"></i>
-            <div class="yeepdf-tool-text"><?php esc_html_e("Rotate Text","pdf-for-wpforms") ?></div>
+            <div class="yeepdf-tool-text"><?php esc_html_e("Rotate Text",'pdf-for-woocommerce') ?></div>
         </div>
     </li>
     <?php

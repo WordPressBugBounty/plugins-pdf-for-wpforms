@@ -6,7 +6,7 @@ function superaddons_pdf_builder_block_image(){
     <li>
         <div class="momongaDraggable" data-type="image">
             <i class="pdf-creator-icon icon-picture"></i>
-            <div class="yeepdf-tool-text"><?php esc_html_e("Image","pdf-for-wpforms") ?></div>
+            <div class="yeepdf-tool-text"><?php esc_html_e("Image",'pdf-for-woocommerce') ?></div>
         </div>
     </li>
     <?php

@@ -6,7 +6,7 @@ function superaddons_pdf_builder_block_button(){
     <li>
         <div class="momongaDraggable" data-type="button">
             <i class="pdf-creator-icon icon-doc-landscape"></i>
-            <div class="yeepdf-tool-text"><?php esc_html_e("Button","pdf-for-wpforms") ?></div>
+            <div class="yeepdf-tool-text"><?php esc_html_e("Button",'pdf-for-woocommerce') ?></div>
         </div>
     </li>
     <?php

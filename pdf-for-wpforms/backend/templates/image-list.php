@@ -6,7 +6,7 @@ function yeepdf_builder_block_img_list(){
 	<li data-type="img_list">
 		<div class="momongaDraggable">
             <i class="dashicons dashicons-images-alt2"></i>
-            <div class="yeepdf-tool-text"><?php esc_html_e("Image List","yeepdf") ?></div>
+            <div class="yeepdf-tool-text"><?php esc_html_e("Image List","pdf-for-woocommerce") ?></div>
         </div>
     </li>
 	<?php

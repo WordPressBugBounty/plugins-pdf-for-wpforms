@@ -6,7 +6,7 @@ function yeepdf_builder_block_text_list(){
 	<li data-type="text_list">
 		<div class="momongaDraggable">
             <i class="dashicons dashicons-menu-alt"></i>
-            <div class="yeepdf-tool-text"><?php esc_html_e("Text List","yeepdf") ?></div>
+            <div class="yeepdf-tool-text"><?php esc_html_e("Text List","pdf-for-woocommerce") ?></div>
         </div>
     </li>
 	<?php
