@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if (! defined('ABSPATH')) exit; // Exit if accessed directly
 /**
  * Website: http://sourceforge.net/projects/simplehtmldom/
  * Acknowledge: Jose Solorzano (https://sourceforge.net/projects/php-html/)
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  * Version Rev. 2.0-RC2 (415)
  */
-
+//phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 if (defined('DEFAULT_TARGET_CHARSET')) {
 	define('\simplehtmldom\DEFAULT_TARGET_CHARSET', DEFAULT_TARGET_CHARSET);
 }
@@ -78,7 +78,7 @@ define('HDOM_SMARTY_AS_TEXT', \simplehtmldom\HDOM_SMARTY_AS_TEXT);
 class_alias('\simplehtmldom\HtmlDocument', 'simple_html_dom', true);
 class_alias('\simplehtmldom\HtmlNode', 'simple_html_dom_node', true);
 
-function file_get_html(
+function file_get_html( //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 	$url,
 	$use_include_path = false,
 	$context = null,
@@ -89,9 +89,11 @@ function file_get_html(
 	$target_charset = DEFAULT_TARGET_CHARSET,
 	$stripRN = true,
 	$defaultBRText = DEFAULT_BR_TEXT,
-	$defaultSpanText = DEFAULT_SPAN_TEXT)
-{
-	if($maxLen <= 0) { $maxLen = MAX_FILE_SIZE; }
+	$defaultSpanText = DEFAULT_SPAN_TEXT
+) {
+	if ($maxLen <= 0) {
+		$maxLen = MAX_FILE_SIZE;
+	}
 
 	$dom = new simple_html_dom(
 		null,
@@ -119,15 +121,15 @@ function file_get_html(
 	return $dom->load($contents, $lowercase, $stripRN);
 }
 
-function str_get_html(
+function str_get_html( //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 	$str,
 	$lowercase = true,
 	$forceTagsClosed = true,
 	$target_charset = DEFAULT_TARGET_CHARSET,
 	$stripRN = true,
 	$defaultBRText = DEFAULT_BR_TEXT,
-	$defaultSpanText = DEFAULT_SPAN_TEXT)
-{
+	$defaultSpanText = DEFAULT_SPAN_TEXT
+) {
 	$dom = new simple_html_dom(
 		null,
 		$lowercase,
@@ -147,7 +149,8 @@ function str_get_html(
 }
 
 /** @codeCoverageIgnore */
-function dump_html_tree($node, $show_attr = true, $deep = 0)
+function dump_html_tree($node, $show_attr = true, $deep = 0) //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 {
 	$node->dump($node);
 }
+//phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound

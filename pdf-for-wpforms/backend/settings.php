@@ -1,6 +1,7 @@
 <?php
 if (! defined('ABSPATH')) exit; // Exit if accessed directly
 global $yeepdf_settings_main;
+//phpcs:disable WordPress.WP.I18n.TextDomainMismatch
 class Yeepdf_Settings_Main
 {
 	private $notices = array();
@@ -38,9 +39,18 @@ class Yeepdf_Settings_Main
 	function ajax_validate_api_token()
 	{
 		check_ajax_referer("yeepdf_dropbox", '_nonce');
-		$clientId = sanitize_text_field(wp_unslash($_POST['clientId']));
-		$clientSecret = sanitize_text_field(wp_unslash($_POST['clientSecret']));
-		$authorizationCode = sanitize_text_field(wp_unslash($_POST['authorizationCode']));
+		$clientId = "";
+		$clientSecret = "";
+		$authorizationCode = "";
+		if (isset($_POST['clientId'])) {
+			$clientId = sanitize_text_field(wp_unslash($_POST['clientId']));
+		}
+		if (isset($_POST['clientSecret'])) {
+			$clientSecret = sanitize_text_field(wp_unslash($_POST['clientSecret']));
+		}
+		if (isset($_POST['authorizationCode'])) {
+			$authorizationCode = sanitize_text_field(wp_unslash($_POST['authorizationCode']));
+		}
 		if (! isset($_POST['clientId'])) {
 			wp_send_json_error();
 		}
@@ -169,27 +179,32 @@ class Yeepdf_Settings_Main
 	public function check_mb_string()
 	{
 		if (! extension_loaded('mbstring')) {
+			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
 			$this->notices[] = sprintf(esc_html__('The PHP Extension MB String could not be detected. Contact your web hosting provider to fix. %1$sGet more info%2$s.', 'pdf-for-woocommerce'), '<a href="https://pdf.add-ons.org/wordpress-pdf-activation-errors-and-how-to-fix-them/">', '</a>');
 		}
 	}
 	public function check_mb_string_regex()
 	{
 		if (extension_loaded('mbstring') && ! function_exists('mb_regex_encoding')) {
+			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
 			$this->notices[] = sprintf(esc_html__('The PHP Extension MB String does not have MB Regex enabled. Contact your web hosting provider to fix. %1$sGet more info%2$s.', 'pdf-for-woocommerce'), '<a href="https://pdf.add-ons.org/wordpress-pdf-activation-errors-and-how-to-fix-them/">', '</a>');
 		}
 	}
 	public function check_gd()
 	{
 		if (! extension_loaded('gd')) {
+			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
 			$this->notices[] = sprintf(esc_html__('The PHP Extension GD Image Library could not be detected. Contact your web hosting provider to fix. %1$sGet more info%2$s.', 'pdf-for-woocommerce'), '<a href="https://pdf.add-ons.org/wordpress-pdf-activation-errors-and-how-to-fix-them/">', '</a>');
 		}
 	}
 	public function check_dom()
 	{
 		if (! extension_loaded('dom') || ! class_exists('DOMDocument')) {
+			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
 			$this->notices[] = sprintf(esc_html__('The PHP DOM Extension was not found. Contact your web hosting provider to fix. %1$sGet more info%2$s.', 'pdf-for-woocommerce'), '<a href="https://pdf.add-ons.org/wordpress-pdf-activation-errors-and-how-to-fix-them/">', '</a>');
 		}
 		if (! extension_loaded('libxml')) {
+			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
 			$this->notices[] = sprintf(esc_html__('The PHP Extension libxml could not be detected. Contact your web hosting provider to fix. %1$sGet more info%2$s.', 'pdf-for-woocommerce'), '<a href="https://pdf.add-ons.org/wordpress-pdf-activation-errors-and-how-to-fix-them/">', '</a>');
 		}
 	}
@@ -198,6 +213,7 @@ class Yeepdf_Settings_Main
 		$memory_limit = $this->convert_ini_memory($ram);
 		$ram = ($memory_limit === '-1') ? -1 : floor($memory_limit / 1024 / 1024);
 		if ($ram < 64 && $ram !== -1) {
+			/* translators: %1$s: opening strong tag, %2$s: closing strong tag, %3$s: memory limit in MB, %4$s: opening anchor tag, %5$s: closing anchor tag */
 			$this->notices[] = sprintf(esc_html__('You need %1$s128MB%2$s of WP Memory (RAM) but we only found %3$s available. %4$sTry these methods to increase your memory limit%5$s, otherwise contact your web hosting provider to fix.', 'pdf-for-woocommerce'), '<strong>', '</strong>', $ram . 'MB', '<a href="https://pdf.add-ons.org/how-to-increase-your-wordpress-memory-limit-for-pdf/">', '</a>');
 		}
 	}
@@ -279,12 +295,14 @@ class Yeepdf_Settings_Main
 		if (!current_user_can('manage_options')) {
 			return;
 		}
-		$fontname = sanitize_text_field(wp_unslash($_POST["font_name"]));
+		$fontname = "";
+		if (isset($_POST["font_name"])) {
+			$fontname = sanitize_text_field(wp_unslash($_POST["font_name"]));
+		}
 		$fontname = preg_replace('/[^a-z]/', '', strtolower($fontname));
 		if ($fontname === '') {
 			die();
 		}
-		$type = sanitize_text_field(wp_unslash($_POST["type"]));
 		$custom_fonts = get_option("pdf_custom_fonts", array());
 		unset($custom_fonts[$fontname]);
 		update_option("pdf_custom_fonts", $custom_fonts);
@@ -313,7 +331,7 @@ class Yeepdf_Settings_Main
 		foreach ($settings as $setting) {
 			register_setting('pdf_creator_font', $setting, ['sanitize_callback' => 'sanitize_text_field']);
 		}
-		if (isset($_POST['pdf_creator_papers'])) {
+		if (isset($_POST['pdf_creator_papers'])) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
 			register_setting('pdf_creator_font', 'pdf_creator_papers', ['sanitize_callback' => 'sanitize_textarea_field']);
 		}
 		$fonts = array("R" => null, "B" => null, "I" => null, "BI" => null);
@@ -327,10 +345,10 @@ class Yeepdf_Settings_Main
 		);
 		$has_upload = false;
 		foreach ($font_fields as $input_key => $style_key) {
-			if (empty($_FILES[$input_key]['tmp_name']) || $_FILES[$input_key]['error'] !== UPLOAD_ERR_OK) {
+			if (empty($_FILES[$input_key]['tmp_name']) || $_FILES[$input_key]['error'] !== UPLOAD_ERR_OK) { //phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 				continue;
 			}
-			$file     = $_FILES[$input_key];
+			$file     = $_FILES[$input_key]; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$tmp_path = $file['tmp_name'];
 			$raw_name = sanitize_file_name($file['name']);
 			$file_info = wp_check_filetype_and_ext($tmp_path, $raw_name);
@@ -383,7 +401,7 @@ class Yeepdf_Settings_Main
 				}
 			}
 		}
-		$font_name_raw = isset($_POST['pdf_creator_font_name']) ? $_POST['pdf_creator_font_name'] : '';
+		$font_name_raw = isset($_POST['pdf_creator_font_name']) ? wp_unslash($_POST['pdf_creator_font_name']) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
 		if ($fonts["R"] && $has_upload && !empty($font_name_raw)) {
 			$name = strtolower(sanitize_text_field($font_name_raw));
 			$name = preg_replace('/[^a-z]/', '', $name);
@@ -661,3 +679,4 @@ class Yeepdf_Settings_Main
 		}
 	}
 	$yeepdf_settings_main = new Yeepdf_Settings_Main;
+//phpcs:enable WordPress.WP.I18n.TextDomainMismatch

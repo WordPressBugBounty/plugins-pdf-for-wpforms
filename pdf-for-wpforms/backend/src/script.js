@@ -17,7 +17,7 @@
         } catch (e) {
           return true;
         }
-        console.log(datas);
+        //console.log(datas);
         $(".builder__list").html("");
         $(".email-builder-main").css(datas["container"]);
         for (let index_row in datas['rows']) {
@@ -85,6 +85,9 @@
             toolbar: false
           });
           $(".yeepdf-table-builder").resizableColumns();
+        }
+        if (typeof $.yeepdf_convert_backend_pdfs === 'function') {
+          $.yeepdf_convert_backend_pdfs();
         }
       },
       builder_to_json: function () {
@@ -389,7 +392,7 @@
     $("body").on("click", "#yeepdf-email-templates .yeepdf-email-actions-import", function (e) {
       e.preventDefault();
       var attachment = $(this).closest(".grid-item").data("file");
-      
+
       $.getJSON(attachment, function (data) {
         $(".data_email").val(data);
         $(".builder__list").html("");

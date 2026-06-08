@@ -1,6 +1,8 @@
-<?php 
+<?php
+
 namespace simplehtmldom;
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+if (! defined('ABSPATH')) exit; // Exit if accessed directly
 /**
  * Website: http://sourceforge.net/projects/simplehtmldom/
  * Acknowledge: Jose Solorzano (https://sourceforge.net/projects/php-html/)
@@ -24,7 +26,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 include_once 'HtmlDocument.php';
 
-class HtmlWeb {
+class HtmlWeb
+{
 
 	/**
 	 * @return HtmlDocument Returns the DOM for a webpage
@@ -34,23 +37,25 @@ class HtmlWeb {
 	 */
 	function load($url)
 	{
-		if(!filter_var($url, FILTER_VALIDATE_URL)) {
+		if (!filter_var($url, FILTER_VALIDATE_URL)) {
 			return null;
 		}
 
-		if($scheme = parse_url($url, PHP_URL_SCHEME)) {
-			switch(strtolower($scheme)) {
+		if ($scheme = parse_url($url, PHP_URL_SCHEME)) {
+			switch (strtolower($scheme)) {
 				case 'http':
-				case 'https': break;
-				default: return null;
+				case 'https':
+					break;
+				default:
+					return null;
 			}
 
-			if(extension_loaded('curl')) {
+			if (extension_loaded('curl')) {
 				return $this->load_curl($url);
-			} elseif(ini_get('allow_url_fopen')) {
+			} elseif (ini_get('allow_url_fopen')) {
 				return $this->load_fopen($url);
 			} else {
-				error_log(__FUNCTION__ . ' requires either the cURL extension or allow_url_fopen=On in php.ini');
+				//error_log(__FUNCTION__ . ' requires either the cURL extension or allow_url_fopen=On in php.ini');
 			}
 		}
 
@@ -81,13 +86,13 @@ class HtmlWeb {
 
 		$doc = curl_exec($ch);
 
-		if(curl_getinfo($ch, CURLINFO_RESPONSE_CODE) !== 200) {
+		if (curl_getinfo($ch, CURLINFO_RESPONSE_CODE) !== 200) {
 			return null;
 		}
 
 		curl_close($ch);
 
-		if(strlen($doc) > MAX_FILE_SIZE) {
+		if (strlen($doc) > MAX_FILE_SIZE) {
 			return null;
 		}
 
@@ -110,26 +115,25 @@ class HtmlWeb {
 
 		$doc = file_get_contents($url, false, $context, 0, MAX_FILE_SIZE + 1);
 
-		if(isset($http_response_header)) {
-			foreach($http_response_header as $rh) {
+		if (isset($http_response_header)) {
+			foreach ($http_response_header as $rh) {
 				// https://stackoverflow.com/a/1442526
 				$parts = explode(' ', $rh, 3);
 
-				if(preg_match('/HTTP\/\d\.\d/', $parts[0])) {
+				if (preg_match('/HTTP\/\d\.\d/', $parts[0])) {
 					$code = $parts[1];
 				}
 			} // Last code is final status
 
-			if(!isset($code) || $code !== '200') {
+			if (!isset($code) || $code !== '200') {
 				return null;
 			}
 		}
 
-		if(strlen($doc) > MAX_FILE_SIZE) {
+		if (strlen($doc) > MAX_FILE_SIZE) {
 			return null;
 		}
 
 		return new HtmlDocument($doc);
 	}
-
 }

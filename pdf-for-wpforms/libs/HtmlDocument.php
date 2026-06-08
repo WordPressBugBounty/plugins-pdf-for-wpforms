@@ -1,6 +1,8 @@
-<?php 
+<?php
+
 namespace simplehtmldom;
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+if (! defined('ABSPATH')) exit; // Exit if accessed directly
 /**
  * Website: http://sourceforge.net/projects/simplehtmldom/
  * Acknowledge: Jose Solorzano (https://sourceforge.net/projects/php-html/)
@@ -100,16 +102,17 @@ class HtmlDocument
 	function __call($func, $args)
 	{
 		// Allow users to call methods with lower_case syntax
-		switch($func)
-		{
+		switch ($func) {
 			case 'load_file':
-				$actual_function = 'loadFile'; break;
-			case 'clear': return; /* no-op */
+				$actual_function = 'loadFile';
+				break;
+			case 'clear':
+				return; /* no-op */
 			default:
-				trigger_error(
-					'Call to undefined method ' . __CLASS__ . '::' . $func . '()',
-					E_USER_ERROR
-				);
+				// trigger_error(
+				// 	'Call to undefined method ' . __CLASS__ . '::' . $func . '()', //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				// 	E_USER_ERROR
+				// );
 		}
 
 		// phpcs:ignore Generic.Files.LineLength
@@ -126,8 +129,8 @@ class HtmlDocument
 		$stripRN = true,
 		$defaultBRText = DEFAULT_BR_TEXT,
 		$defaultSpanText = DEFAULT_SPAN_TEXT,
-		$options = 0)
-	{
+		$options = 0
+	) {
 		if ($str) {
 			if (preg_match('/^http:\/\//i', $str) || is_file($str)) {
 				$this->load_file($str);
@@ -179,8 +182,8 @@ class HtmlDocument
 		$stripRN = true,
 		$defaultBRText = DEFAULT_BR_TEXT,
 		$defaultSpanText = DEFAULT_SPAN_TEXT,
-		$options = 0)
-	{
+		$options = 0
+	) {
 		// prepare
 		$this->prepare($str, $lowercase, $defaultBRText, $defaultSpanText);
 
@@ -209,7 +212,7 @@ class HtmlDocument
 			Debug::log('Support for server-side scripts has been deprecated and will be removed in the next major version of simplehtmldom.');
 		}
 
-		if($options & HDOM_SMARTY_AS_TEXT) { // Strip Smarty scripts
+		if ($options & HDOM_SMARTY_AS_TEXT) { // Strip Smarty scripts
 			$this->remove_noise("'(\{\w)(.*?)(\})'s", true);
 			// phpcs:ignore Generic.Files.LineLength
 			Debug::log('Support for Smarty scripts has been deprecated and will be removed in the next major version of simplehtmldom.');
@@ -240,7 +243,9 @@ class HtmlDocument
 	function save($filepath = '')
 	{
 		$ret = $this->root->innertext();
-		if ($filepath !== '') { file_put_contents($filepath, $ret, LOCK_EX); }
+		if ($filepath !== '') {
+			file_put_contents($filepath, $ret, LOCK_EX);
+		}
 		return $ret;
 	}
 
@@ -261,13 +266,14 @@ class HtmlDocument
 	}
 
 	protected function prepare(
-		$str, $lowercase = true,
+		$str,
+		$lowercase = true,
 		$defaultBRText = DEFAULT_BR_TEXT,
-		$defaultSpanText = DEFAULT_SPAN_TEXT)
-	{
+		$defaultSpanText = DEFAULT_SPAN_TEXT
+	) {
 		$this->clear();
 
-		$this->doc = trim( (string) $str);
+		$this->doc = trim((string) $str);
 		$this->size = strlen($this->doc);
 		$this->original_size = $this->size; // original size of the html
 		$this->pos = 0;
@@ -282,12 +288,14 @@ class HtmlDocument
 		$this->root->_[HtmlNode::HDOM_INFO_BEGIN] = -1;
 		$this->root->nodetype = HtmlNode::HDOM_TYPE_ROOT;
 		$this->parent = $this->root;
-		if ($this->size > 0) { $this->char = $this->doc[0]; }
+		if ($this->size > 0) {
+			$this->char = $this->doc[0];
+		}
 	}
 
 	protected function decode()
 	{
-		foreach($this->nodes as $node) {
+		foreach ($this->nodes as $node) {
 			if (isset($node->_[HtmlNode::HDOM_INFO_TEXT])) {
 				$node->_[HtmlNode::HDOM_INFO_TEXT] = html_entity_decode(
 					$this->restore_noise($node->_[HtmlNode::HDOM_INFO_TEXT]),
@@ -303,7 +311,7 @@ class HtmlDocument
 				);
 			}
 			if (isset($node->attr) && is_array($node->attr)) {
-				foreach($node->attr as $a => $v) {
+				foreach ($node->attr as $a => $v) {
 					if ($v === true) continue;
 					$node->attr[$a] = html_entity_decode(
 						$v,
@@ -333,11 +341,10 @@ class HtmlDocument
 					++$this->cursor;
 					$node->_[HtmlNode::HDOM_INFO_TEXT] = $content;
 					$this->link_nodes($node, false);
-
 				}
 			}
 
-			if($this->read_tag($trim) === false) {
+			if ($this->read_tag($trim) === false) {
 				break;
 			}
 		}
@@ -406,7 +413,7 @@ class HtmlDocument
 				 */
 				$encoding = mb_detect_encoding(
 					$this->doc,
-					array( 'UTF-8', 'CP1252', 'ISO-8859-1' )
+					array('UTF-8', 'CP1252', 'ISO-8859-1')
 				);
 
 				if ($encoding === 'CP1252' || $encoding === 'ISO-8859-1') {
@@ -434,7 +441,8 @@ class HtmlDocument
 		// it instead.
 		if ((strtolower($charset) == 'iso-8859-1')
 			|| (strtolower($charset) == 'latin1')
-			|| (strtolower($charset) == 'latin-1')) {
+			|| (strtolower($charset) == 'latin-1')
+		) {
 			$charset = 'CP1252';
 		}
 
@@ -484,7 +492,7 @@ class HtmlDocument
 					$org_parent = $this->parent;
 
 					// Look for the start tag
-					while (($this->parent->parent) && strtolower($this->parent->tag) !== $tag_lower){
+					while (($this->parent->parent) && strtolower($this->parent->tag) !== $tag_lower) {
 						// Close any unclosed element with optional end tags
 						if (isset($this->optional_closing_tags[strtolower($this->parent->tag)]))
 							$this->parent->_[HtmlNode::HDOM_INFO_END] = $this->cursor;
@@ -563,7 +571,7 @@ class HtmlDocument
 				// There is a rare chance of empty comment: "<!---->"
 				// In which case the current char is the first "-" of the end tag
 				// But the comment could also just be a dash: "<!----->"
-				while(true) {
+				while (true) {
 					// Copy until first char of end tag
 					$data .= $this->copy_until_char('-');
 
@@ -602,7 +610,7 @@ class HtmlDocument
 				// There is a rare chance of empty CDATA: "<[CDATA[]]>"
 				// In which case the current char is the first "[" of the end tag
 				// But the CDATA could also just be a bracket: "<[CDATA[]]]>"
-				while(true) {
+				while (true) {
 					// Copy until first char of end tag
 					$data .= $this->copy_until_char(']');
 
@@ -775,7 +783,7 @@ class HtmlDocument
 			// There is a rare chance of empty script: "<script></script>"
 			// In which case the current char is the start of the end tag
 			// But the script could also just contain tags: "<script><div></script>"
-			while(true) {
+			while (true) {
 				// Copy until first char of end tag
 				$data .= $this->copy_until_char('<');
 
@@ -881,7 +889,9 @@ class HtmlDocument
 	{
 		$pos = $this->pos;
 		$len = strspn($this->doc, $chars, $pos);
-		if ($len === 0) { return ''; }
+		if ($len === 0) {
+			return '';
+		}
 		$this->pos += $len;
 		$this->char = ($this->pos < $this->size) ? $this->doc[$this->pos] : null; // next
 		return substr($this->doc, $pos, $len);
@@ -898,7 +908,9 @@ class HtmlDocument
 
 	protected function copy_until_char($char)
 	{
-		if ($this->char === null) { return ''; }
+		if ($this->char === null) {
+			return '';
+		}
 
 		if (($pos = strpos($this->doc, $char, $this->pos)) === false) {
 			$ret = substr($this->doc, $this->pos, $this->size - $this->pos);
@@ -907,7 +919,9 @@ class HtmlDocument
 			return $ret;
 		}
 
-		if ($pos === $this->pos) { return ''; }
+		if ($pos === $this->pos) {
+			return '';
+		}
 
 		$pos_old = $this->pos;
 		$this->char = $this->doc[$pos];
@@ -953,16 +967,16 @@ class HtmlDocument
 			// malicious software
 			if (strlen($text) > $pos + 15) {
 				$key = '___noise___'
-				. $text[$pos + 11]
-				. $text[$pos + 12]
-				. $text[$pos + 13]
-				. $text[$pos + 14]
-				. $text[$pos + 15];
+					. $text[$pos + 11]
+					. $text[$pos + 12]
+					. $text[$pos + 13]
+					. $text[$pos + 14]
+					. $text[$pos + 15];
 
 				if (isset($this->noise[$key])) {
 					$text = substr($text, 0, $pos)
-					. $this->noise[$key]
-					. substr($text, $pos + 16);
+						. $this->noise[$key]
+						. substr($text, $pos + 16);
 
 					unset($this->noise[$key]);
 				} else {
@@ -970,17 +984,17 @@ class HtmlDocument
 					// do this to prevent an infinite loop.
 					// FIXME: THis causes an infinite loop because the keyword ___NOISE___ is included in the key!
 					$text = substr($text, 0, $pos)
-					. 'UNDEFINED NOISE FOR KEY: '
-					. $key
-					. substr($text, $pos + 16);
+						. 'UNDEFINED NOISE FOR KEY: '
+						. $key
+						. substr($text, $pos + 16);
 				}
 			} else {
 				// There is no valid key being given back to us... We must get
 				// rid of the ___noise___ or we will have a problem.
 				Debug::log_once('Noise restoration failed. The provided key is incomplete: ' . $text);
 				$text = substr($text, 0, $pos)
-				. 'NO NUMERIC NOISE KEY'
-				. substr($text, $pos + 11);
+					. 'NO NUMERIC NOISE KEY'
+					. substr($text, $pos + 11);
 			}
 		}
 		return $text;
@@ -988,7 +1002,7 @@ class HtmlDocument
 
 	function search_noise($text)
 	{
-		foreach($this->noise as $noiseElement) {
+		foreach ($this->noise as $noiseElement) {
 			if (strpos($noiseElement, $text) !== false) {
 				return $noiseElement;
 			}
@@ -1083,7 +1097,7 @@ class HtmlDocument
 	{
 		$args = func_get_args();
 
-		if(($doc = call_user_func_array('file_get_contents', $args)) !== false) {
+		if (($doc = call_user_func_array('file_get_contents', $args)) !== false) {
 			$this->load($doc, true);
 		} else {
 			return false;

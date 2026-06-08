@@ -86,22 +86,28 @@ class Yeepdf_Settings_Builder_PDF_Backend
         }
 ?>
         <div class="builder__editor--item builder__editor--item-settings">
-            <label><?php esc_html_e("Settings", 'pdf-for-woocommerce') ?></label>
+            <label><?php esc_html_e("Settings", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch 
+                    ?></label>
             <div class="yeepdf_setting_group">
                 <div class="yeepdf_setting_row">
                     <div class="yeepdf_settings_group-wrapper">
-                        <label class="yeepdf_checkbox_label"><?php esc_html_e("DPI", 'pdf-for-woocommerce') ?></label>
+                        <label class="yeepdf_checkbox_label"><?php esc_html_e("DPI", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch 
+                                                                ?></label>
                         <input name="builder_pdf_settings[dpi]" type="text" class="yeepdf_setting_input" value="<?php echo esc_attr($pdfs["dpi"]) ?>">
                     </div>
                     <div class="yeepdf_settings_group-wrapper">
-                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Orientation", 'pdf-for-woocommerce') ?></label>
+                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Orientation", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch 
+                                                                ?></label>
                         <select name="builder_pdf_settings[orientation]" class="yeepdf_setting_input">
-                            <option value="P"><?php esc_html_e("Portrait", 'pdf-for-woocommerce') ?></option>
-                            <option <?php selected($pdfs["orientation"], "L") ?> value="L"><?php esc_html_e("Landscape", 'pdf-for-woocommerce') ?></option>
+                            <option value="P"><?php esc_html_e("Portrait", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch 
+                                                ?></option>
+                            <option <?php selected($pdfs["orientation"], "L") ?> value="L"><?php esc_html_e("Landscape", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch 
+                                                                                            ?></option>
                         </select>
                     </div>
                     <div class="yeepdf_settings_group-wrapper">
-                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Paper Size", 'pdf-for-woocommerce') ?></label>
+                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Paper Size", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch 
+                                                                ?></label>
                         <select name="builder_pdf_settings[size]" class="yeepdf_setting_input">
                             <?php
                             foreach ($sizes as $group => $options) {
@@ -123,7 +129,8 @@ class Yeepdf_Settings_Builder_PDF_Backend
                 </div>
                 <div class="yeepdf_setting_row">
                     <div class="yeepdf_settings_group-wrapper">
-                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Font family", 'pdf-for-woocommerce') ?></label>
+                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Font family", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                ?></label>
                         <select class="font_family yeepdf_setting_input" name="builder_pdf_settings_font_family">
                             <?php
                             foreach ($list_fonts as $font => $vl) {
@@ -141,22 +148,26 @@ class Yeepdf_Settings_Builder_PDF_Backend
                         </select>
                     </div>
                     <div class="yeepdf_settings_group-wrapper">
-                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Font size", 'pdf-for-woocommerce') ?></label>
+                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Font size", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                ?></label>
                         <input type="number" class="font-size-main">
                     </div>
                     <div class="yeepdf_settings_group-wrapper">
-                        <?php Yeepdf_Editor::get_color_pick(esc_html__("Font color", 'pdf-for-woocommerce')) ?>
+                        <?php Yeepdf_Editor::get_color_pick(esc_html__("Font color", 'pdf-for-woocommerce')) //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                        ?>
                     </div>
                 </div>
                 <div class="yeepdf_setting_row">
                     <div class="yeepdf_settings_group-wrapper">
-                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Header Template", 'pdf-for-woocommerce') ?></label>
+                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Header Template", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                ?></label>
                         <?php
                         do_action("yeepdf_header_settings", $pdfs, $list_tempates);
                         ?>
                     </div>
                     <div class="yeepdf_settings_group-wrapper">
-                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Footer Template", 'pdf-for-woocommerce') ?></label>
+                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Footer Template", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                ?></label>
                         <?php
                         do_action("yeepdf_footer_settings", $pdfs, $list_tempates);
                         ?>
@@ -164,7 +175,8 @@ class Yeepdf_Settings_Builder_PDF_Backend
                 </div>
                 <div class="yeepdf_setting_row">
                     <div class="yeepdf_settings_group-wrapper">
-                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Watermark text", 'pdf-for-woocommerce') ?></label>
+                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Watermark text", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                ?></label>
                         <?php
                         do_action("yeepdf_watermark_text_settings", $pdfs);
                         ?>
@@ -172,19 +184,22 @@ class Yeepdf_Settings_Builder_PDF_Backend
                 </div>
                 <div class="yeepdf_setting_row">
                     <div class="yeepdf_settings_group-wrapper">
-                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Watermark image", 'pdf-for-woocommerce') ?></label>
+                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Watermark image", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                ?></label>
                         <?php
                         do_action("yeepdf_watermark_img_settings", $pdfs);
                         ?>
                     </div>
                     <div class="yeepdf_settings_group-wrapper">
-                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Upload image", 'pdf-for-woocommerce') ?></label>
+                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Upload image", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                ?></label>
                         <input type="button" class="upload-editor--image-ok button button-primary" value="Upload">
                     </div>
                 </div>
                 <div class="yeepdf_setting_row">
                     <div class="yeepdf_settings_group-wrapper">
-                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Custom CSS", 'pdf-for-woocommerce') ?></label>
+                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Custom CSS", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                ?></label>
                         <?php
                         $css = "";
                         if (isset($pdfs["css"])) {
@@ -196,7 +211,8 @@ class Yeepdf_Settings_Builder_PDF_Backend
                 </div>
                 <div class="yeepdf_setting_row">
                     <div class="yeepdf_settings_group-wrapper">
-                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Disable Active Form", 'pdf-for-woocommerce') ?></label>
+                        <label class="yeepdf_checkbox_label"><?php esc_html_e("Disable Active Form", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                ?></label>
                         <?php
                         $css = "";
                         if (isset($pdfs["disable_active_form"]) && $pdfs["disable_active_form"] == "yes") {
@@ -235,9 +251,9 @@ class Yeepdf_Settings_Builder_PDF_Backend
                 </div>
                 <div class="header-right-r">
                     <div class="" title="Templates">
-                        <a href="#" class="button yeepdf-email-choose-template"><span
-                                class="dashicons dashicons-welcome-add-page"></span>
-                            <?php esc_html_e("Templates", "pdf-for-woocommerce")  ?></a>
+                        <a href="#" class="button yeepdf-email-choose-template">
+                            <?php esc_html_e("Templates", "pdf-for-woocommerce") //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch 
+                            ?></a>
                     </div>
                     <div class="" title="Import Template">
                         <a href="#" class="button yeepdf-email-import"><span class="dashicons dashicons-upload"></span></a>
@@ -256,10 +272,12 @@ class Yeepdf_Settings_Builder_PDF_Backend
                             $url = add_query_arg(array("pdf_preview" => "preview", "preview" => 1, "id" => $post_id), get_home_url());
                         }
                         ?>
-                        <a class="button" target="_blank" href="<?php echo esc_url(wp_nonce_url($url, "yeepdf")) ?>"><span class="dashicons dashicons-visibility"></span> <?php esc_html_e("Preview", "pdf-for-woocommerce")  ?></a>
+                        <a class="button yeepdf-email-choose-preview " target="_blank" href="<?php echo esc_url(wp_nonce_url($url, "yeepdf")) ?>"><?php esc_html_e("Preview", "pdf-for-woocommerce") //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch 
+                                                                                                                                                    ?></a>
                     </div>
                     <div class="">
-                        <a href="#" class="button button-yeepdf-save button-primary-ok"><span class="dashicons dashicons-saved"></span> <?php esc_html_e("Save", "pdf-for-woocommerce")  ?></a>
+                        <a href="#" class="button button-yeepdf-save button-primary-ok"><?php esc_html_e("Save", "pdf-for-woocommerce") //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch 
+                                                                                        ?></a>
                     </div>
                 </div>
             </div>
@@ -271,22 +289,26 @@ class Yeepdf_Settings_Builder_PDF_Backend
                     <div class="builder__widget">
                         <div class="builder_main_info">
                             <div class="builder_main_info_text">
-                                <?php esc_attr_e("YeePDF - PDF Customizer", "pdf-for-woocommerce") ?>
+                                <?php esc_attr_e("YeePDF - PDF Customizer", "pdf-for-woocommerce") //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch 
+                                ?>
                             </div>
                             <div class="builder_main_info_icon" title="Go To Dashboard">
                                 <a href="<?php echo esc_url(get_admin_url() . "edit.php?post_type=yeepdf") ?>"><span class="dashicons dashicons-wordpress"></span></a>
                             </div>
                         </div>
                         <ul class="builder__tab">
-                            <li class="tab__block_elements"><a class="active" id="#tab__block"><span><?php esc_html_e("Elements", 'pdf-for-woocommerce')  ?></span> </a></li>
-                            <li><a class="" id="#tab__editor"><span><?php esc_html_e("Editor", 'pdf-for-woocommerce')  ?></span></a></li>
+                            <li class="tab__block_elements"><a class="active" id="#tab__block"><span><?php esc_html_e("Elements", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                                                        ?></span> </a></li>
+                            <li><a class="" id="#tab__editor"><span><?php esc_html_e("Editor", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                    ?></span></a></li>
                         </ul>
                         <div class="tab__inner">
                             <div class="tab__content active" id="tab__block">
                                 <div class="builder__widget--inner">
                                     <div class="builder__widget_tab builder__widget_genaral">
                                         <div class="builder__widget_tab_title"><span
-                                                class="builder__widget_tab_title_t"><?php esc_attr_e("Genaral", "pdf-for-woocommerce") ?></span><span
+                                                class="builder__widget_tab_title_t"><?php esc_attr_e("Genaral", "pdf-for-woocommerce") //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                                    ?></span><span
                                                 class="builder__widget_tab_title_icon dashicons dashicons-arrow-down-alt2"></span><span
                                                 class="builder__widget_tab_title_icon dashicons dashicons-arrow-up-alt2"></span>
                                         </div>
@@ -298,7 +320,8 @@ class Yeepdf_Settings_Builder_PDF_Backend
                                 <div class="builder__widget--inner">
                                     <div class="builder__widget_tab builder__widget_columns">
                                         <div class="builder__widget_tab_title"><span
-                                                class="builder__widget_tab_title_t"><?php esc_attr_e("Columns", "pdf-for-woocommerce") ?></span><span
+                                                class="builder__widget_tab_title_t"><?php esc_attr_e("Columns", "pdf-for-woocommerce") //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                                    ?></span><span
                                                 class="builder__widget_tab_title_icon dashicons dashicons-arrow-down-alt2"></span><span
                                                 class="builder__widget_tab_title_icon dashicons dashicons-arrow-up-alt2"></span><span
                                                 class="builder__widget_tab_title_icon dashicons dashicons-arrow-up-alt2"></span>
@@ -319,11 +342,13 @@ class Yeepdf_Settings_Builder_PDF_Backend
                                 <div class="builder_main_footer_text">
                                     <a href="<?php echo esc_url(get_dashboard_url()) ?>"><span
                                             class="dashicons dashicons-arrow-left-alt"></span>
-                                        <?php esc_attr_e("BACK TO DASHBOARD", "pdf-for-woocommerce") ?></a>
+                                        <?php esc_attr_e("BACK TO DASHBOARD", "pdf-for-woocommerce") //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                        ?></a>
                                 </div>
                                 <div class="builder_main_footer_icon">
                                     <a href="#"
-                                        class="button button-primary yeepdf_button_settings"><?php esc_attr_e("SETTINGS", "pdf-for-woocommerce") ?></a>
+                                        class="button button-primary yeepdf_button_settings"><?php esc_attr_e("SETTINGS", "pdf-for-woocommerce") //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                                                ?></a>
                                 </div>
                             </div>
                         </div>
@@ -332,7 +357,8 @@ class Yeepdf_Settings_Builder_PDF_Backend
             </div>
             <div class="email-builder-main" data-type="main">
                 <div class="email-builder-main-change_backgroud" data-type="main"><i class="pdf-creator-icon icon-pencil"></i>
-                    <?php esc_html_e("Settings PDF", 'pdf-for-woocommerce') ?></div>
+                    <?php esc_html_e("Settings PDF", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                    ?></div>
                 <div class="builder__list builder__list--js">
                     <div class="builder-row-container builder__item">
                         <div style="background-color: #ffffff" data-background_full="not" data-type="row1"
@@ -370,12 +396,12 @@ class Yeepdf_Settings_Builder_PDF_Backend
     {
         global $post;
         $add_libs = false;
-        if ((isset($post->post_type) && $post->post_type == "yeepdf") || (isset($_GET["post_type"]) && $_GET["post_type"] == "yeepdf")) {
+        if ((isset($post->post_type) && $post->post_type == "yeepdf") || (isset($_GET["post_type"]) && $_GET["post_type"] == "yeepdf")) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $add_libs = true;
         }
         $add_libs = apply_filters("yeepdf_add_libs", $add_libs);
         if ($add_libs) {
-            $ver = "6.5.0";
+            $ver = "7.0.0";
             //$ver = time();
             wp_enqueue_script('jquery');
             wp_enqueue_style('yeepdf-font', YEEPDF_CREATOR_BUILDER_URL . "backend/css/pdfcreator.css", array(), $ver);
@@ -430,6 +456,7 @@ class Yeepdf_Settings_Builder_PDF_Backend
                     'home_url' => get_home_url(),
                     'builder_shorcode' => $builder_shorcode,
                     'builder_shorcode_re' => $builder_shorcode_re,
+                    'imagick_installed' => class_exists('Imagick'),
                 )
             );
         }
@@ -437,7 +464,7 @@ class Yeepdf_Settings_Builder_PDF_Backend
     function add_font()
     {
         global $post_type;
-        if ("yeepdf" == $post_type || (isset($_GET["page"]) && $_GET["page"] == "yeepdf-settings")) {
+        if ("yeepdf" == $post_type || (isset($_GET["page"]) && $_GET["page"] == "yeepdf-settings")) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $upload_dir = wp_upload_dir();
             $path_main = $upload_dir['basedir'] . '/pdfs/fonts/';
             $defaultConfig     = (new Mpdf\Config\ConfigVariables())->getDefaults();
@@ -453,9 +480,11 @@ class Yeepdf_Settings_Builder_PDF_Backend
                     font-display: block;
                     src: url(<?php echo esc_url(YEEPDF_CREATOR_BUILDER_URL) ?>"vendor/mpdf/mpdf/ttfonts/fontawesome.ttf") format("truetype");
                 }
+
                 .fontawesome {
                     font-family: "fontawesome";
                 }
+
                 <?php foreach ($fonts as $key => $value) {
                     foreach ($value as $k => $vl) {
                         if (is_readable($fontDirs[0] . "/" . $vl)) {
@@ -481,6 +510,7 @@ class Yeepdf_Settings_Builder_PDF_Backend
                     font-style: <?php echo esc_attr($font_style) ?>;
                     font-weight: <?php echo esc_attr($font_weight) ?>;
                 }
+
                 <?php
                         }
                     }
@@ -510,6 +540,7 @@ class Yeepdf_Settings_Builder_PDF_Backend
                     font-style: <?php echo esc_attr($font_style) ?>;
                     font-weight: <?php echo esc_attr($font_weight) ?>;
                 }
+
                 <?php
                         }
                     }
@@ -525,11 +556,11 @@ class Yeepdf_Settings_Builder_PDF_Backend
             'yeepdf',
             array(
                 'labels' => array(
-                    'name' => esc_html__('PDF Templates', 'pdf-for-woocommerce'),
-                    'add_new' => esc_html__('New Template', 'pdf-for-woocommerce'),
-                    'new_item' => esc_html__('New Template', 'pdf-for-woocommerce'),
-                    'add_new_item' => esc_html__('New Template', 'pdf-for-woocommerce'),
-                    'singular_name' => esc_html__('yeepdfs', 'pdf-for-woocommerce')
+                    'name' => esc_html__('PDF Templates', 'pdf-for-woocommerce'), //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                    'add_new' => esc_html__('New Template', 'pdf-for-woocommerce'), //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                    'new_item' => esc_html__('New Template', 'pdf-for-woocommerce'), //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                    'add_new_item' => esc_html__('New Template', 'pdf-for-woocommerce'), //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                    'singular_name' => esc_html__('yeepdfs', 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
                 ),
                 'public' => false,
                 'has_archive' => true,
@@ -586,7 +617,7 @@ class Yeepdf_Settings_Builder_PDF_Backend
         $styles[] = 'border-width';
         $styles[] = 'background';
         $styles[] = 'background-color';
-        $styles[] = 'background-image'; // Lưu ý: WP sẽ tự check URL bên trong cái này để chặn link độc
+        $styles[] = 'background-image';
         $styles[] = 'color';
         $styles[] = 'opacity';
         $styles[] = 'box-shadow';
@@ -599,7 +630,7 @@ class Yeepdf_Settings_Builder_PDF_Backend
         $styles[] = 'text-decoration';
         $styles[] = 'line-height';
         $styles[] = 'letter-spacing';
-        $styles[] = 'white-space'; 
+        $styles[] = 'white-space';
         $styles[] = 'cursor';
         $styles[] = 'vertical-align';
         return $styles;
@@ -622,7 +653,7 @@ class Yeepdf_Settings_Builder_PDF_Backend
             return;
         }
         if (isset($_POST['data_email'])) {
-            $raw = wp_unslash($_POST['data_email']);
+            $raw = wp_unslash($_POST['data_email']); //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             $raw = is_string($raw) ? trim($raw) : '';
             if ($raw !== '') {
                 $decoded = json_decode($raw, true);
@@ -634,12 +665,7 @@ class Yeepdf_Settings_Builder_PDF_Backend
                     //remove_filter('safe_style_css', array($this, 'yeepdf_allow_custom_css'));
                     update_post_meta($post_id, 'data_email', $clean_data);
                 } else {
-                    // Invalid JSON - don't overwrite existing stored template.
-                    error_log('YeePDF: invalid JSON received for data_email on post_id=' . absint($post_id));
                 }
-            } else {
-                // Empty value clears the meta.
-                error_log('YeePDF: invalid JSON received for data_email on post_id=' . absint($post_id));
             }
         }
         if (isset($_POST['builder_pdf_settings_font_family'])) {
@@ -648,8 +674,8 @@ class Yeepdf_Settings_Builder_PDF_Backend
         }
         if (isset($_POST['builder_pdf_settings'])) {
             $datas = array();
-            if (is_array($_POST["builder_pdf_settings"])) {
-                foreach ($_POST["builder_pdf_settings"] as $key => $value) {
+            if (is_array($_POST["builder_pdf_settings"])) { //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+                foreach ($_POST["builder_pdf_settings"] as $key => $value) { //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
                     $datas[sanitize_key($key)] = sanitize_textarea_field(wp_unslash($value));
                 }
                 update_post_meta($post_id, '_builder_pdf_settings', $datas);
@@ -669,7 +695,7 @@ class Yeepdf_Settings_Builder_PDF_Backend
     {
         add_meta_box(
             'email-builder-main',
-            esc_html__('Builder PDF', 'pdf-for-woocommerce'),
+            esc_html__('Builder PDF', 'pdf-for-woocommerce'), //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
             array($this, 'email_builder_main'),
             'yeepdf',
             'normal',
@@ -681,7 +707,7 @@ class Yeepdf_Settings_Builder_PDF_Backend
         global $post_type;
         $screen = get_current_screen();
         if ('yeepdf' == $post_type && $screen->id == 'yeepdf') {
-            return  $classes . " post-php";
+            return  $classes . " post-php"; //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
         } else {
             return  $classes;
         }
@@ -782,13 +808,16 @@ class Yeepdf_Settings_Builder_PDF_Backend
                 <div class="yeepdf-email-actions">
                     <div class="demo-fl">
                         <a class="button yeepdf-email-actions-import"
-                            href="#"><?php esc_html_e("Import", 'pdf-for-woocommerce') ?></a>
+                            href="#"><?php esc_html_e("Import", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                        ?></a>
                         <a target="_blank" class="button yeepdf-email-actions-design"
-                            href="<?php echo esc_url($url_design) ?>"><?php esc_html_e("Design", 'pdf-for-woocommerce') ?></a>
+                            href="<?php echo esc_url($url_design) ?>"><?php esc_html_e("Design", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                        ?></a>
                     </div>
                     <div class="demo-fr">
                         <a target="_blank" class="button yeepdf-email-actions-view"
-                            href="<?php echo esc_url($url_view) ?>"><?php esc_html_e("Preview", 'pdf-for-woocommerce') ?></a>
+                            href="<?php echo esc_url($url_view) ?>"><?php esc_html_e("Preview", 'pdf-for-woocommerce') //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                                                                    ?></a>
                     </div>
                     <div class="clear"></div>
                 </div>

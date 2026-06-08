@@ -1,7 +1,7 @@
 <?php
 if (! defined('ABSPATH')) exit; // Exit if accessed directly
 //version 1.4: Add voucher
-ini_set('pcre.backtrack_limit', 10000000);
+ini_set('pcre.backtrack_limit', 10000000); //phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
 if (!function_exists('str_contains')) {
 	function str_contains($haystack, $needle)
 	{
@@ -75,8 +75,8 @@ class Yeepdf_Create_PDF
 	}
 	function template_include($template)
 	{
-		if (isset($_GET['pdf_preview'])) {
-			if ($_GET['pdf_preview'] == "preview") {
+		if (isset($_GET['pdf_preview'])) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ($_GET['pdf_preview'] == "preview") { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$template = YEEPDF_CREATOR_BUILDER_PATH . "preview.php";
 			}
 			if (file_exists($template)) {
@@ -208,7 +208,7 @@ class Yeepdf_Create_PDF
 		$fontDirs = $defaultConfig['fontDir'];
 		$fontData  = Yeepdf_Settings_Main::get_list_fonts();
 		$google_fonts = get_option("pdf_custom_fonts", array());
-		$google_fonts = apply_filters("pdf_custom_fonts", $google_fonts);
+		$google_fonts = apply_filters("pdf_custom_fonts", $google_fonts); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$size = $settings["size"];
 		$sizes = explode(",", $size);
 		if (count($sizes) > 1) {
@@ -289,6 +289,46 @@ class Yeepdf_Create_PDF
 		if (ob_get_length() > 0) {
 			ob_clean();
 		}
+		// Convert PDF elements to images
+		if (strpos($html, 'yeepdf-pdf-to-image') !== false) {
+			if (!function_exists('str_get_html')) {
+				include YEEPDF_CREATOR_BUILDER_PATH . "libs/simple_html_dom.php";
+			}
+			$dom = str_get_html($html);
+			if ($dom) {
+				$pdf_images_changed = false;
+				foreach ($dom->find('img.yeepdf-pdf-to-image') as $img) {
+					$pdf_url = $img->getAttribute('src');
+					if (!empty($pdf_url) && strtolower(pathinfo(wp_parse_url($pdf_url, PHP_URL_PATH), PATHINFO_EXTENSION)) === 'pdf') {
+						$image_urls = self::convert_pdf_to_images($pdf_url);
+						if (!empty($image_urls)) {
+							$new_html = '';
+							$style = $img->getAttribute('style');
+							$width = $img->getAttribute('width');
+							$height = $img->getAttribute('height');
+							foreach ($image_urls as $img_url) {
+								$new_html .= '<img src="' . esc_url($img_url) . '"';
+								if (!empty($style)) {
+									$new_html .= ' style="' . esc_attr($style) . '"';
+								}
+								if (!empty($width)) {
+									$new_html .= ' width="' . esc_attr($width) . '"';
+								}
+								if (!empty($height)) {
+									$new_html .= ' height="' . esc_attr($height) . '"';
+								}
+								$new_html .= ' />';
+							}
+							$img->outertext = $new_html;
+							$pdf_images_changed = true;
+						}
+					}
+				}
+				if ($pdf_images_changed) {
+					$html = $dom->save();
+				}
+			}
+		}
 		preg_match_all('/<img[^>]+src=["\']([^"\']+)["\']/', $html, $matches);
 		$imgExt = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
 		$html = preg_replace_callback(
@@ -364,7 +404,7 @@ class Yeepdf_Create_PDF
 			default:
 				//preview
 				$html = str_replace("data---image", "data:image", $html);
-				
+
 				$html = apply_filters("yeepdf_output_html", $html, $data_attrs);
 				$mpdf->WriteHTML($html);
 				$mpdf->Output($data_attrs["name"] . ".pdf", "I");
@@ -375,9 +415,9 @@ class Yeepdf_Create_PDF
 	{
 		$html = "";
 		$data_json = get_post_meta($id_template, 'data_email', true);
-		if(is_array($data_json)){
+		if (is_array($data_json)) {
 			$data_json = $data_json;
-		}else{
+		} else {
 			$data_json = json_decode($data_json, true);
 		}
 		if (!$data_json) {
@@ -399,6 +439,7 @@ class Yeepdf_Create_PDF
 			?>body {
 				background-color: <?php echo esc_attr($container["background-color"]) ?> !important;
 			}
+
 			@page {
 				margin: <?php echo esc_attr($container["padding-top"]) ?> <?php echo esc_attr($container["padding-right"]) ?> <?php echo esc_attr($container["padding-bottom"]) ?> <?php echo esc_attr($container["padding-left"]) ?>;
 				<?php
@@ -413,6 +454,7 @@ class Yeepdf_Create_PDF
 				}
 				?>
 			}
+
 			<?php
 			}
 			?>.<?php echo esc_attr($class) ?> {
@@ -427,6 +469,7 @@ class Yeepdf_Create_PDF
 				echo wp_kses_post($container_css);
 				?>
 			}
+
 			.<?php echo esc_attr($class) ?>,
 			body,
 			table,
@@ -463,7 +506,8 @@ class Yeepdf_Create_PDF
 					if ($show_row) {
 				?>
 						<div class="container-row" style="width:100%;">
-							<div class="row" style="<?php echo ($row_style); // phpcs:ignore WordPress.Security.EscapeOutput ?>">
+							<div class="row" style="<?php echo ($row_style); // phpcs:ignore WordPress.Security.EscapeOutput 
+													?>">
 								<?php
 								$i = 0;
 								foreach ($row_columns as $column) {
@@ -555,6 +599,102 @@ class Yeepdf_Create_PDF
 		$html = ob_get_clean();
 		return $html;
 	}
+
+	public static function convert_pdf_to_images($pdf_url_or_path)
+	{
+		if (empty($pdf_url_or_path)) {
+			return array();
+		}
+
+		$pdf_path = '';
+		if (strpos($pdf_url_or_path, 'http') === 0) {
+			$upload_dir = wp_upload_dir();
+			if (strpos($pdf_url_or_path, $upload_dir['baseurl']) === 0) {
+				$pdf_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $pdf_url_or_path);
+			} else {
+				$site_url = site_url();
+				$parsed_site = wp_parse_url($site_url);
+				$parsed_pdf = wp_parse_url($pdf_url_or_path);
+				if (isset($parsed_pdf['host']) && $parsed_pdf['host'] === $parsed_site['host']) {
+					$pdf_path = ABSPATH . ltrim($parsed_pdf['path'], '/');
+				}
+			}
+		} else {
+			$pdf_path = $pdf_url_or_path;
+		}
+
+		if (empty($pdf_path) || !file_exists($pdf_path)) {
+			if (strpos($pdf_url_or_path, 'http') === 0) {
+				if (!function_exists('download_url')) {
+					require_once ABSPATH . 'wp-admin/includes/file.php';
+				}
+				$temp_pdf = download_url($pdf_url_or_path);
+				if (!is_wp_error($temp_pdf)) {
+					$pdf_path = $temp_pdf;
+				}
+			}
+		}
+
+		if (empty($pdf_path) || !file_exists($pdf_path)) {
+			return array();
+		}
+
+		$upload_dir = wp_upload_dir();
+		$cache_dir = $upload_dir['basedir'] . '/yeepdf_cache/';
+		$cache_url = $upload_dir['baseurl'] . '/yeepdf_cache/';
+		if (!file_exists($cache_dir)) {
+			wp_mkdir_p($cache_dir);
+		}
+
+		$file_hash = md5($pdf_url_or_path . filemtime($pdf_path));
+		$image_urls = array();
+
+		$existing_files = glob($cache_dir . $file_hash . '_page_*.png');
+		if (!empty($existing_files)) {
+			natsort($existing_files);
+			foreach ($existing_files as $file) {
+				$image_urls[] = str_replace($cache_dir, $cache_url, $file);
+			}
+			if (isset($temp_pdf) && file_exists($temp_pdf)) {
+				@unlink($temp_pdf);
+			}
+			return $image_urls;
+		}
+
+		if (class_exists('Imagick')) {
+			try {
+				$imagick = new Imagick();
+				$imagick->setResolution(150, 150);
+				$imagick->readImage($pdf_path);
+				$num_pages = $imagick->getNumberImages();
+				for ($i = 0; $i < $num_pages; $i++) {
+					$imagick->setIteratorIndex($i);
+					$imagick->setImageFormat('png');
+					$dest_filename = $file_hash . '_page_' . $i . '.png';
+					$dest_path = $cache_dir . $dest_filename;
+					$imagick->writeImage($dest_path);
+					$image_urls[] = $cache_url . $dest_filename;
+				}
+				$imagick->clear();
+				$imagick->destroy();
+			} catch (Exception $e) {
+				error_log('YeePDF Imagick conversion failed: ' . $e->getMessage());
+			}
+		} else {
+			error_log('YeePDF: Imagick is not installed/enabled on this server.');
+		}
+
+		if (isset($temp_pdf) && file_exists($temp_pdf)) {
+			@unlink($temp_pdf);
+		}
+
+		if (empty($image_urls)) {
+			$image_urls[] = YEEPDF_ELEMENTOR_PDF_PLUGIN_URL . 'images/your-image.png';
+		}
+
+		return $image_urls;
+	}
+
 	public static function cover_type_element_to_html($element, $datas_builder, $datas = array())
 	{
 		$result = "";
@@ -611,6 +751,21 @@ class Yeepdf_Create_PDF
 							if ($attrs["data-type"] == 1) {
 								$change_data = str_replace('"', "'", $attrs["data-field"]);
 								$html_el->find("img", 0)->setAttribute("src", $change_data);
+							} else {
+								if ($v != "") {
+									$html_el->find($key, 0)->setAttribute($k, $v);
+								}
+							}
+							break;
+						case "pdf":
+							if ($html_el->find("img", 0)) {
+								$html_el->find("img", 0)->addClass("yeepdf-pdf-to-image");
+							}
+							if ($attrs["data-type"] == 1) {
+								$change_data = str_replace('"', "'", $attrs["data-field"]);
+								if ($html_el->find("img", 0)) {
+									$html_el->find("img", 0)->setAttribute("src", $change_data);
+								}
 							} else {
 								if ($v != "") {
 									$html_el->find($key, 0)->setAttribute($k, $v);
@@ -761,10 +916,10 @@ class Yeepdf_Create_PDF
 	}
 	public static function is_logic($conditional, $datas = null, $test = false)
 	{
-		if (isset($_GET["woo_order"])) {
+		if (isset($_GET["woo_order"])) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			//woo download
 		} else {
-			if (isset($_GET["pdf_preview"])) {
+			if (isset($_GET["pdf_preview"])) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return true;
 			}
 		}

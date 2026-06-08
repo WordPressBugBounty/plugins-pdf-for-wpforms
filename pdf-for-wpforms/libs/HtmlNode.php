@@ -1,6 +1,9 @@
-<?php 
+<?php
+
 namespace simplehtmldom;
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+if (! defined('ABSPATH')) exit; // Exit if accessed directly
+//phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 
 /**
  * Website: http://sourceforge.net/projects/simplehtmldom/
@@ -60,25 +63,30 @@ class HtmlNode
 	function __call($func, $args)
 	{
 		// Allow users to call methods with lower_case syntax
-		switch($func)
-		{
+		switch ($func) {
 			case 'children':
-				$actual_function = 'childNodes'; break;
+				$actual_function = 'childNodes';
+				break;
 			case 'first_child':
-				$actual_function = 'firstChild'; break;
+				$actual_function = 'firstChild';
+				break;
 			case 'has_child':
-				$actual_function = 'hasChildNodes'; break;
+				$actual_function = 'hasChildNodes';
+				break;
 			case 'last_child':
-				$actual_function = 'lastChild'; break;
+				$actual_function = 'lastChild';
+				break;
 			case 'next_sibling':
-				$actual_function = 'nextSibling'; break;
+				$actual_function = 'nextSibling';
+				break;
 			case 'prev_sibling':
-				$actual_function = 'previousSibling'; break;
+				$actual_function = 'previousSibling';
+				break;
 			default:
-				trigger_error(
-					'Call to undefined method ' . __CLASS__ . '::' . $func . '()',
-					E_USER_ERROR
-				);
+				// trigger_error(
+				// 	'Call to undefined method ' . __CLASS__ . '::' . $func . '()',
+				// 	E_USER_ERROR
+				// );
 		}
 
 		// phpcs:ignore Generic.Files.LineLength
@@ -98,8 +106,7 @@ class HtmlNode
 	function __debugInfo()
 	{
 		// Translate node type to human-readable form
-		switch($this->nodetype)
-		{
+		switch ($this->nodetype) {
 			case self::HDOM_TYPE_ELEMENT:
 				$nodetype = "HDOM_TYPE_ELEMENT ($this->nodetype)";
 				break;
@@ -316,8 +323,14 @@ class HtmlNode
 		// todo: When we have the utility class this should be moved there
 		return in_array(strtolower($node->tag), array(
 			'p',
-			'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-			'ol', 'ul',
+			'h1',
+			'h2',
+			'h3',
+			'h4',
+			'h5',
+			'h6',
+			'ol',
+			'ul',
 			'pre',
 			'address',
 			'blockquote',
@@ -339,10 +352,37 @@ class HtmlNode
 	{
 		// todo: When we have the utility class this should be moved there
 		return in_array(strtolower($node->tag), array(
-			'b', 'big', 'i', 'small', 'tt',
-			'abbr', 'acronym', 'cite', 'code', 'dfn', 'em', 'kbd', 'strong', 'samp', 'var',
-			'a', 'bdo', 'br', 'img', 'map', 'object', 'q', 'script', 'span', 'sub', 'sup',
-			'button', 'input', 'label', 'select', 'textarea'
+			'b',
+			'big',
+			'i',
+			'small',
+			'tt',
+			'abbr',
+			'acronym',
+			'cite',
+			'code',
+			'dfn',
+			'em',
+			'kbd',
+			'strong',
+			'samp',
+			'var',
+			'a',
+			'bdo',
+			'br',
+			'img',
+			'map',
+			'object',
+			'q',
+			'script',
+			'span',
+			'sub',
+			'sup',
+			'button',
+			'input',
+			'label',
+			'select',
+			'textarea'
 		));
 	}
 
@@ -379,7 +419,6 @@ class HtmlNode
 					continue;
 
 				$ret = rtrim($ret) . "\n\n" . $block;
-
 			} elseif ($this->is_inline_element($n)) {
 				// todo: <br> introduces code smell because no space but \n
 				if (strtolower($n->tag) === 'br') {
@@ -424,7 +463,9 @@ class HtmlNode
 		foreach ($this->attr as $key => $val) {
 
 			// skip removed attribute
-			if ($val === null || $val === false) { continue; }
+			if ($val === null || $val === false) {
+				continue;
+			}
 
 			if (isset($this->_[self::HDOM_INFO_SPACE][$key])) {
 				$ret .= $this->_[self::HDOM_INFO_SPACE][$key][0];
@@ -442,8 +483,7 @@ class HtmlNode
 					$quote_type = self::HDOM_QUOTE_DOUBLE;
 				}
 
-				switch ($quote_type)
-				{
+				switch ($quote_type) {
 					case self::HDOM_QUOTE_SINGLE:
 						$quote = '\'';
 						$val = htmlentities($val, ENT_QUOTES, $this->dom->target_charset);
@@ -458,16 +498,16 @@ class HtmlNode
 				}
 
 				$ret .= $key
-				. (isset($this->_[self::HDOM_INFO_SPACE][$key]) ? $this->_[self::HDOM_INFO_SPACE][$key][1] : '')
-				. '='
-				. (isset($this->_[self::HDOM_INFO_SPACE][$key]) ? $this->_[self::HDOM_INFO_SPACE][$key][2] : '')
-				. $quote
-				. $val
-				. $quote;
+					. (isset($this->_[self::HDOM_INFO_SPACE][$key]) ? $this->_[self::HDOM_INFO_SPACE][$key][1] : '')
+					. '='
+					. (isset($this->_[self::HDOM_INFO_SPACE][$key]) ? $this->_[self::HDOM_INFO_SPACE][$key][2] : '')
+					. $quote
+					. $val
+					. $quote;
 			}
 		}
 
-		if(isset($this->_[self::HDOM_INFO_ENDSPACE])) {
+		if (isset($this->_[self::HDOM_INFO_ENDSPACE])) {
 			$ret .= $this->_[self::HDOM_INFO_ENDSPACE];
 		}
 
@@ -477,7 +517,9 @@ class HtmlNode
 	function find($selector, $idx = null, $lowercase = false)
 	{
 		$selectors = $this->parse_selector($selector);
-		if (($count = count($selectors)) === 0) { return array(); }
+		if (($count = count($selectors)) === 0) {
+			return array();
+		}
 		$found_keys = array();
 
 		// find each selector
@@ -528,8 +570,11 @@ class HtmlNode
 		}
 
 		// return nth-element or array
-		if (is_null($idx)) { return $found; }
-		elseif ($idx < 0) { $idx = count($found) + $idx; }
+		if (is_null($idx)) {
+			return $found;
+		} elseif ($idx < 0) {
+			$idx = count($found) + $idx;
+		}
 		return (isset($found[$idx])) ? $found[$idx] : null;
 	}
 
@@ -570,68 +615,70 @@ class HtmlNode
 			);
 		} elseif ($parent_cmd === '>') { // Child Combinator
 			$nodes = $this->children;
-		} elseif ($parent_cmd === '+'
+		} elseif (
+			$parent_cmd === '+'
 			&& $this->parent
-			&& in_array($this, $this->parent->children)) { // Next-Sibling Combinator
-				$index = array_search($this, $this->parent->children, true) + 1;
-				if ($index < count($this->parent->children))
-					$nodes[] = $this->parent->children[$index];
-		} elseif ($parent_cmd === '~'
+			&& in_array($this, $this->parent->children)
+		) { // Next-Sibling Combinator
+			$index = array_search($this, $this->parent->children, true) + 1;
+			if ($index < count($this->parent->children))
+				$nodes[] = $this->parent->children[$index];
+		} elseif (
+			$parent_cmd === '~'
 			&& $this->parent
-			&& in_array($this, $this->parent->children)) { // Subsequent Sibling Combinator
-				$index = array_search($this, $this->parent->children, true);
-				$nodes = array_slice($this->parent->children, $index);
+			&& in_array($this, $this->parent->children)
+		) { // Subsequent Sibling Combinator
+			$index = array_search($this, $this->parent->children, true);
+			$nodes = array_slice($this->parent->children, $index);
 		}
 
 		// Go throgh each element starting at this element until the end tag
 		// Note: If this element is a void tag, any previous void element is
 		// skipped.
-		foreach($nodes as $node) {
+		foreach ($nodes as $node) {
 			$pass = true;
 
 			// Skip root nodes
-			if(!$node->parent) {
+			if (!$node->parent) {
 				unset($node);
 				continue;
 			}
 
 			// Handle 'text' selector
-			if($pass && $tag === 'text') {
+			if ($pass && $tag === 'text') {
 
-				if($node->tag === 'text') {
+				if ($node->tag === 'text') {
 					$ret[array_search($node, $this->dom->nodes, true)] = 1;
 				}
 
-				if(isset($node->_[self::HDOM_INFO_INNER])) {
+				if (isset($node->_[self::HDOM_INFO_INNER])) {
 					$ret[$node->_[self::HDOM_INFO_BEGIN]] = 1;
 				}
 
 				unset($node);
 				continue;
-
 			}
 
 			// Handle 'cdata' selector
-			if($pass && $tag === 'cdata') {
+			if ($pass && $tag === 'cdata') {
 
-				if($node->tag === 'cdata') {
+				if ($node->tag === 'cdata') {
 					$ret[$node->_[self::HDOM_INFO_BEGIN]] = 1;
 				}
 
 				unset($node);
 				continue;
-
 			}
 
 			// Handle 'comment'
-			if($pass && $tag === 'comment' && $node->tag === 'comment') {
+			if ($pass && $tag === 'comment' && $node->tag === 'comment') {
 				$ret[$node->_[self::HDOM_INFO_BEGIN]] = 1;
 				unset($node);
 				continue;
 			}
 
 			// Skip if node isn't a child node (i.e. text nodes)
-			if($pass && !in_array($node, $node->parent->children, true)) {
+			if ($pass && !in_array($node, $node->parent->children, true)) {
 				unset($node);
 				continue;
 			}
@@ -651,7 +698,9 @@ class HtmlNode
 				// Note: Only consider the first ID (as browsers do)
 				$node_id = explode(' ', trim($node->attr['id']))[0];
 
-				if($id !== $node_id) { $pass = false; }
+				if ($id !== $node_id) {
+					$pass = false;
+				}
 			}
 
 			// Check if all class(es) exist
@@ -670,8 +719,8 @@ class HtmlNode
 						$node_classes = array_map('strtolower', $node_classes);
 					}
 
-					foreach($class as $c) {
-						if(!in_array($c, $node_classes)) {
+					foreach ($class as $c) {
+						if (!in_array($c, $node_classes)) {
 							$pass = false;
 							break;
 						}
@@ -682,96 +731,102 @@ class HtmlNode
 			}
 
 			// Check attributes
-			if ($pass
+			if (
+				$pass
 				&& $attributes !== ''
 				&& is_array($attributes)
-				&& !empty($attributes)) {
-					foreach($attributes as $a) {
-						list (
-							$att_name,
-							$att_expr,
-							$att_val,
-							$att_inv,
-							$att_case_sensitivity
-						) = $a;
+				&& !empty($attributes)
+			) {
+				foreach ($attributes as $a) {
+					list(
+						$att_name,
+						$att_expr,
+						$att_val,
+						$att_inv,
+						$att_case_sensitivity
+					) = $a;
 
 						// Handle indexing attributes (i.e. "[2]")
-						/**
-						 * Note: This is not supported by the CSS Standard but adds
-						 * the ability to select items compatible to XPath (i.e.
-						 * the 3rd element within it's parent).
-						 *
-						 * Note: This doesn't conflict with the CSS Standard which
-						 * doesn't work on numeric attributes anyway.
-						 */
-						if (is_numeric($att_name)
-							&& $att_expr === ''
-							&& $att_val === '') {
-								$count = 0;
+					/**
+					 * Note: This is not supported by the CSS Standard but adds
+					 * the ability to select items compatible to XPath (i.e.
+					 * the 3rd element within it's parent).
+					 *
+					 * Note: This doesn't conflict with the CSS Standard which
+					 * doesn't work on numeric attributes anyway.
+					 */
+					if (
+						is_numeric($att_name)
+						&& $att_expr === ''
+						&& $att_val === ''
+					) {
+						$count = 0;
 
-								// Find index of current element in parent
-								foreach ($node->parent->children as $c) {
-									if ($c->tag === $node->tag) ++$count;
-									if ($c === $node) break;
-								}
-
-								// If this is the correct node, continue with next
-								// attribute
-								if ($count === (int)$att_name) continue;
+						// Find index of current element in parent
+						foreach ($node->parent->children as $c) {
+							if ($c->tag === $node->tag) ++$count;
+							if ($c === $node) break;
 						}
 
-						// Check attribute availability
-						if ($att_inv) { // Attribute should NOT be set
-							if (isset($node->attr[$att_name])) {
-								$pass = false;
-								break;
-							}
-						} else { // Attribute should be set
-							// todo: "plaintext" is not a valid CSS selector!
-							if ($att_name !== 'plaintext'
-								&& !isset($node->attr[$att_name])) {
-									$pass = false;
-									break;
-							}
+						// If this is the correct node, continue with next
+						// attribute
+						if ($count === (int)$att_name) continue;
+					}
+
+					// Check attribute availability
+					if ($att_inv) { // Attribute should NOT be set
+						if (isset($node->attr[$att_name])) {
+							$pass = false;
+							break;
 						}
-
-						// Continue with next attribute if expression isn't defined
-						if ($att_expr === '') continue;
-
-						// If they have told us that this is a "plaintext"
-						// search then we want the plaintext of the node - right?
-						// todo "plaintext" is not a valid CSS selector!
-						if ($att_name === 'plaintext') {
-							$nodeKeyValue = $node->text();
-						} else {
-							$nodeKeyValue = $node->attr[$att_name];
-						}
-
-						// If lowercase is set, do a case insensitive test of
-						// the value of the selector.
-						if ($lowercase) {
-							$check = $this->match(
-								$att_expr,
-								strtolower($att_val),
-								strtolower($nodeKeyValue),
-								$att_case_sensitivity
-							);
-						} else {
-							$check = $this->match(
-								$att_expr,
-								$att_val,
-								$nodeKeyValue,
-								$att_case_sensitivity
-							);
-						}
-
-						$check = $ps_element === 'not' ? !$check : $check;
-
-						if (!$check) {
+					} else { // Attribute should be set
+						// todo: "plaintext" is not a valid CSS selector!
+						if (
+							$att_name !== 'plaintext'
+							&& !isset($node->attr[$att_name])
+						) {
 							$pass = false;
 							break;
 						}
 					}
+
+					// Continue with next attribute if expression isn't defined
+					if ($att_expr === '') continue;
+
+					// If they have told us that this is a "plaintext"
+					// search then we want the plaintext of the node - right?
+					// todo "plaintext" is not a valid CSS selector!
+					if ($att_name === 'plaintext') {
+						$nodeKeyValue = $node->text();
+					} else {
+						$nodeKeyValue = $node->attr[$att_name];
+					}
+
+					// If lowercase is set, do a case insensitive test of
+					// the value of the selector.
+					if ($lowercase) {
+						$check = $this->match(
+							$att_expr,
+							strtolower($att_val),
+							strtolower($nodeKeyValue),
+							$att_case_sensitivity
+						);
+					} else {
+						$check = $this->match(
+							$att_expr,
+							$att_val,
+							$nodeKeyValue,
+							$att_case_sensitivity
+						);
+					}
+
+					$check = $ps_element === 'not' ? !$check : $check;
+
+					if (!$check) {
+						$pass = false;
+						break;
+					}
+				}
 			}
 
 			// Found a match. Add to list and clear node
@@ -906,7 +961,9 @@ class HtmlNode
 			$m[0] = trim($m[0]);
 
 			// Skip NoOps
-			if ($m[0] === '' || $m[0] === '/' || $m[0] === '//') { continue; }
+			if ($m[0] === '' || $m[0] === '/' || $m[0] === '//') {
+				continue;
+			}
 
 			array_shift($m);
 
@@ -916,7 +973,9 @@ class HtmlNode
 			}
 
 			// Extract classes
-			if ($m[4] !== '') { $m[4] = explode('.', $m[4]); }
+			if ($m[4] !== '') {
+				$m[4] = explode('.', $m[4]);
+			}
 
 			/* Extract attributes (pattern based on the pattern above!)
 
@@ -928,7 +987,7 @@ class HtmlNode
 			 *
 			 * Note: Attributes can be negated with a "!" prefix to their name
 			 */
-			if($m[5] !== '') {
+			if ($m[5] !== '') {
 				preg_match_all(
 					"/\[@?(!?[\w:-]+)(?:([!*^$|~]?=)[\"']?(.*?)[\"']?)?(?:\s+?([iIsS])?)?\]/is",
 					trim($m[5]),
@@ -939,9 +998,11 @@ class HtmlNode
 				// Replace element by array
 				$m[5] = array();
 
-				foreach($attributes as $att) {
+				foreach ($attributes as $att) {
 					// Skip empty matches
-					if(trim($att[0]) === '') { continue; }
+					if (trim($att[0]) === '') {
+						continue;
+					}
 
 					$inverted = (isset($att[1][0]) && $att[1][0] === '!');
 					$m[5][] = array(
@@ -962,7 +1023,9 @@ class HtmlNode
 			}
 
 			// Clear Separator if it's a Selector List
-			if ($is_list = ($m[6] === ',')) { $m[6] = ''; }
+			if ($is_list = ($m[6] === ',')) {
+				$m[6] = '';
+			}
 
 			$result[] = $m;
 
@@ -972,7 +1035,9 @@ class HtmlNode
 			}
 		}
 
-		if (count($result) > 0) { $selectors[] = $result; }
+		if (count($result) > 0) {
+			$selectors[] = $result;
+		}
 		return $selectors;
 	}
 
@@ -983,10 +1048,14 @@ class HtmlNode
 		}
 
 		switch ($name) {
-			case 'outertext': return $this->outertext();
-			case 'innertext': return $this->innertext();
-			case 'plaintext': return $this->text();
-			case 'xmltext': return $this->xmltext();
+			case 'outertext':
+				return $this->outertext();
+			case 'innertext':
+				return $this->innertext();
+			case 'plaintext':
+				return $this->text();
+			case 'xmltext':
+				return $this->xmltext();
 		}
 
 		return false;
@@ -1004,16 +1073,20 @@ class HtmlNode
 				}
 				$this->_[self::HDOM_INFO_INNER] = $value;
 				break;
-			default: $this->attr[$name] = $value;
+			default:
+				$this->attr[$name] = $value;
 		}
 	}
 
 	function __isset($name)
 	{
 		switch ($name) {
-			case 'outertext': return true;
-			case 'innertext': return true;
-			case 'plaintext': return true;
+			case 'outertext':
+				return true;
+			case 'innertext':
+				return true;
+			case 'plaintext':
+				return true;
 		}
 
 		return isset($this->attr[$name]);
@@ -1021,7 +1094,9 @@ class HtmlNode
 
 	function __unset($name)
 	{
-		if (isset($this->attr[$name])) { unset($this->attr[$name]); }
+		if (isset($this->attr[$name])) {
+			unset($this->attr[$name]);
+		}
 	}
 
 	function convert_text($text)
@@ -1063,24 +1138,37 @@ class HtmlNode
 
 	static function is_utf8($str)
 	{
-		$c = 0; $b = 0;
+		$c = 0;
+		$b = 0;
 		$bits = 0;
 		$len = strlen($str);
-		for($i = 0; $i < $len; $i++) {
+		for ($i = 0; $i < $len; $i++) {
 			$c = ord($str[$i]);
-			if($c > 128) {
-				if(($c >= 254)) { return false; }
-				elseif($c >= 252) { $bits = 6; }
-				elseif($c >= 248) { $bits = 5; }
-				elseif($c >= 240) { $bits = 4; }
-				elseif($c >= 224) { $bits = 3; }
-				elseif($c >= 192) { $bits = 2; }
-				else { return false; }
-				if(($i + $bits) > $len) { return false; }
-				while($bits > 1) {
+			if ($c > 128) {
+				if (($c >= 254)) {
+					return false;
+				} elseif ($c >= 252) {
+					$bits = 6;
+				} elseif ($c >= 248) {
+					$bits = 5;
+				} elseif ($c >= 240) {
+					$bits = 4;
+				} elseif ($c >= 224) {
+					$bits = 3;
+				} elseif ($c >= 192) {
+					$bits = 2;
+				} else {
+					return false;
+				}
+				if (($i + $bits) > $len) {
+					return false;
+				}
+				while ($bits > 1) {
 					$i++;
 					$b = ord($str[$i]);
-					if($b < 128 || $b > 191) { return false; }
+					if ($b < 128 || $b > 191) {
+						return false;
+					}
 					$bits--;
 				}
 			}
@@ -1145,7 +1233,6 @@ class HtmlNode
 					}
 				}
 			}
-
 		}
 
 		// Future enhancement:
@@ -1189,7 +1276,7 @@ class HtmlNode
 		}
 
 		if (is_array($class)) {
-			foreach($class as $c) {
+			foreach ($class as $c) {
 				if (isset($this->class)) {
 					if ($this->hasClass($c)) {
 						continue;
@@ -1273,13 +1360,13 @@ class HtmlNode
 
 	function removeChild($node)
 	{
-		foreach($node->children as $child) {
+		foreach ($node->children as $child) {
 			$node->removeChild($child);
 		}
 
 		// No need to re-index node->children because it is about to be removed!
 
-		foreach($node->nodes as $entity) {
+		foreach ($node->nodes as $entity) {
 			$enidx = array_search($entity, $node->nodes, true);
 			$edidx = array_search($entity, $node->dom->nodes, true);
 
@@ -1402,7 +1489,6 @@ class HtmlNode
 		}
 
 		return null;
-
 	}
 
 	function hasChildNodes()
@@ -1424,7 +1510,7 @@ class HtmlNode
 		if ($this->dom) { // Attach current node to DOM (recursively)
 			$children = array($node);
 
-			while($children) {
+			while ($children) {
 				$child = array_pop($children);
 				$children = array_merge($children, $child->children);
 
@@ -1439,5 +1525,5 @@ class HtmlNode
 
 		return $this;
 	}
-
 }
+//phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped

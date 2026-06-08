@@ -108,6 +108,9 @@
               break;
             default:
               var data = html_emlement.find(key).attr(style);
+              if (style === 'src' && html_emlement.find(key).attr('data-pdf-url')) {
+                data = html_emlement.find(key).attr('data-pdf-url');
+              }
           }
           // Preserve arrays/objects (value_checkbox, value_select, value_radio)
           // Only cast primitives to string
@@ -368,6 +371,11 @@
           })
         });
       }
+      if (type === 'pdf') {
+        if (typeof $.yeepdf_convert_backend_pdfs === 'function') {
+          $.yeepdf_convert_backend_pdfs();
+        }
+      }
     }
     //Click emlement -> get and show editor
     $.fn.yeepdf_load_type_editor = function (row) {
@@ -381,6 +389,7 @@
       var show_class_container = wp_builder_pdf["block"][type]["editor"]["container"]["show"];
       var style_container_element = wp_builder_pdf["block"][type]["editor"]["container"]["style"];
       var attr_container_element = wp_builder_pdf["block"][type]["editor"]["container"]["attr"];
+
       //Show eidtor
       $.each(show_class_container, function (key, value) {
         $(".builder__editor--item-" + value).removeClass("hidden");
@@ -396,6 +405,7 @@
         }
         $.yeepdf_set_css_editor(value, key, data, builder);
       });
+
       $.each(attr_container_element, function (key, value) {
         var data = builder.attr(value);
         var type = $(key).attr("type");
@@ -416,6 +426,7 @@
       if (!row) {
         var attr_inner_element = wp_builder_pdf["block"][type]["editor"]["inner"]["attr"];
         var style_inner_element = wp_builder_pdf["block"][type]["editor"]["inner"]["style"];
+
         //set editor in element style
         $.each(style_inner_element, function (key, value) {
           $.each(value, function (index, style) {
@@ -502,7 +513,7 @@
               case "value_radio":
                 let value_check = "";
                 let i_c = 0;
-                $(builder.find(".yeepdf_checkbox_container input")).each(function () {
+                $(builder.find(".yeepdf_checkbox_container input, .yeepdf_radio_container input")).each(function () {
                   if (i_c == 0) {
                     value_check += $(this).val();
                   } else {
@@ -514,6 +525,9 @@
                 break;
               default:
                 var data = builder.find(key).attr(attr);
+                if (attr === 'src' && builder.find(key).attr('data-pdf-url')) {
+                  data = builder.find(key).attr('data-pdf-url');
+                }
                 var type = $(index).attr("type");
                 if (type == "checkbox") {
                   if (data == "ok" || data == "yes") {
@@ -690,6 +704,9 @@
       return img
     }
     $.yeepdf_set_css_editor = function (style, index, data, builder) {
+      if (style === undefined) {
+        return;
+      }
       switch (style) {
         case "border-color":
         case "background-color":
@@ -712,7 +729,7 @@
             var data1 = builder.find("img")[0].style.width;
           } else {
             //text
-            if (builder.find(".text-content")[0].style.width === undefined) {
+            if (builder.find(".text-content")[0]?.style?.width === undefined) {
               var data1 = "100%";
             } else {
               var data1 = builder.find(".text-content")[0].style.width;
@@ -733,7 +750,7 @@
             var data1 = builder.find("img")[0].style.height;
           } else {
             //text
-            if (builder.find(".text-content")[0].style.height === undefined) {
+            if (builder.find(".text-content")[0]?.style?.width === undefined) {
               var data1 = "auto";
             } else {
               var data1 = builder.find(".text-content")[0].style.height;
@@ -857,5 +874,64 @@
         $(".yeepdf_my_account_buttons_custom").addClass("hidden");
       }
     })
+    $.yeepdf_convert_backend_pdfs = function() {
+      var imagickInstalled = true;
+      if (window.yeepdf_script && typeof yeepdf_script.imagick_installed !== 'undefined') {
+        imagickInstalled = yeepdf_script.imagick_installed;
+      }
+
+      if (!imagickInstalled) {
+        $('.builder-elements-content[data-type="pdf"]').each(function() {
+          var container = $(this);
+          if (container.find('.yeepdf-imagick-warning').length === 0) {
+            container.append(
+              '<div class="yeepdf-imagick-warning" style="background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 12px; margin: 10px 0; border-radius: 4px; font-family: sans-serif; font-size: 13px; text-align: center;">' +
+              '<strong>Error:</strong> The PHP <strong>Imagick</strong> extension is not installed/enabled on your server. Please install and enable Imagick to display and convert PDF files.' +
+              '</div>'
+            );
+            container.find('img').hide();
+          }
+        });
+        return;
+      }
+
+      $('.builder-elements-content[data-type="pdf"] img').each(function() {
+        var img = $(this);
+        var src = img.attr('src');
+        if (src && src.toLowerCase().indexOf('.pdf') > -1) {
+          var nonce = $('#_yeepdf_check_nonce').val() || (window.yeepdf_script && yeepdf_script._yeepdf_check_nonce) || '';
+          img.addClass('yeepdf-pdf-converting');
+          $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: {
+              action: 'yeepdf_convert_pdf',
+              pdf_url: src,
+              _nonce: nonce
+            },
+            success: function(response) {
+              img.removeClass('yeepdf-pdf-converting');
+              if (response.success && response.data.images && response.data.images.length > 0) {
+                img.attr('data-pdf-url', src);
+                img.attr('src', response.data.images[0]);
+              } else if (!response.success && response.data && response.data.imagick_missing) {
+                var container = img.closest('.builder-elements-content');
+                if (container.find('.yeepdf-imagick-warning').length === 0) {
+                  container.append(
+                    '<div class="yeepdf-imagick-warning" style="background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 12px; margin: 10px 0; border-radius: 4px; font-family: sans-serif; font-size: 13px; text-align: center;">' +
+                    '<strong>Error:</strong> The PHP <strong>Imagick</strong> extension is not installed/enabled on your server. Please install and enable Imagick to display and convert PDF files.' +
+                    '</div>'
+                  );
+                  img.hide();
+                }
+              }
+            },
+            error: function() {
+              img.removeClass('yeepdf-pdf-converting');
+            }
+          });
+        }
+      });
+    };
   })
 })(jQuery);

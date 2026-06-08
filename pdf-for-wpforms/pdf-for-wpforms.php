@@ -4,7 +4,7 @@
  * Plugin Name: PDF for WPForms + Drag and Drop Template Builder
  * Description:  WPForms PDF Customizer is a helpful tool that helps you build and customize the PDF Templates for WPforms.
  * Plugin URI: https://add-ons.org/plugin/wpforms-pdf-generator-attachment/
- * Version: 6.5.2
+ * Version: 7.1.0
  * Requires PHP: 5.6
  * Author: add-ons.org
  * Author URI: https://add-ons.org/

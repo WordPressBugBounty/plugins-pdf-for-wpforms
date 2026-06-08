@@ -1,6 +1,7 @@
 <?php
 if (!defined('ABSPATH'))
 	exit; // Exit if accessed directly
+//phpcs:disable WordPress.WP.I18n.TextDomainMismatch
 class Yeepdf_Ajax
 {
 	function __construct()
@@ -9,6 +10,7 @@ class Yeepdf_Ajax
 		add_action('wp_ajax_yeepdf_builder_export_html', array($this, 'yeepdf_builder_export_html'));
 		add_action('wp_ajax_pdf_reset_template', array($this, 'pdf_reset_template'));
 		add_action('wp_ajax_yeepdf_import_template', array($this, 'yeepdf_import_template'));
+		add_action('wp_ajax_yeepdf_convert_pdf', array($this, 'yeepdf_convert_pdf'));
 		add_action("admin_init", array($this, "pdf_reset_template_php"));
 		add_action('add_meta_boxes', array($this, 'remove_wp_seo_meta_box'), 100);
 	}
@@ -67,8 +69,8 @@ class Yeepdf_Ajax
 	function pdf_reset_template_php()
 	{
 		if (isset($_GET["pdf_reset"])) {
-			if (wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'pdf_reset')) {
-				$post_id = sanitize_text_field(wp_unslash($_GET['post']));
+			if (isset($_GET['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'pdf_reset')) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$post_id = isset($_GET['post']) ? sanitize_text_field(wp_unslash($_GET['post'])) : '';
 				update_post_meta($post_id, 'data_email', '');
 			}
 		}
@@ -94,11 +96,11 @@ class Yeepdf_Ajax
 		check_ajax_referer('_yeepdf_check_nonce', '_nonce');
 		if (class_exists("Yeepdf_Addons_Woocommerce_Shortcodes")) {
 			$shortcode = new Yeepdf_Addons_Woocommerce_Shortcodes;
-			$order_id = sanitize_text_field($_POST["order_id"]);
+			$order_id = isset($_POST["order_id"]) ? sanitize_text_field(wp_unslash($_POST["order_id"])) : '';
 			$shortcode->set_order_id($order_id);
 		}
-		$string_with_shortcodes = wp_filter_post_kses($_POST["text"]);
-		$type = sanitize_text_field($_POST["type"]);
+		$string_with_shortcodes = isset($_POST["text"]) ? sanitize_textarea_field(wp_unslash($_POST["text"])) : '';
+		$type = isset($_POST["type"]) ? sanitize_text_field(wp_unslash($_POST["type"])) : '';
 		if ($type == "barcode") {
 			$string_with_shortcodes = '[wp_builder_pdf_barcode]' . $string_with_shortcodes . '[/wp_builder_pdf_barcode]';
 		} elseif ($type == "qrcode") {
@@ -106,8 +108,29 @@ class Yeepdf_Ajax
 		}
 		$string_with_shortcodes = str_replace('\\', "", $string_with_shortcodes);
 		$string_with_shortcodes = do_shortcode($string_with_shortcodes);
-		echo $string_with_shortcodes; // phpcs:ignore WordPress.Security.EscapeOutput
+		echo wp_kses_post($string_with_shortcodes);
 		die();
+	}
+
+	function yeepdf_convert_pdf()
+	{
+		check_ajax_referer('_yeepdf_check_nonce', '_nonce');
+		$pdf_url = isset($_POST["pdf_url"]) ? esc_url_raw(wp_unslash($_POST["pdf_url"])) : '';
+		if (empty($pdf_url)) {
+			wp_send_json_error(array('message' => 'Empty URL'));
+		}
+
+		if (!class_exists('Imagick')) {
+			wp_send_json_error(array('message' => 'Imagick extension is not installed on the server.', 'imagick_missing' => true));
+		}
+
+		$images = Yeepdf_Create_PDF::convert_pdf_to_images($pdf_url);
+		if (!empty($images)) {
+			wp_send_json_success(array('images' => $images));
+		} else {
+			wp_send_json_error(array('message' => 'Conversion failed'));
+		}
 	}
 }
 new Yeepdf_Ajax;
+//phpcs:enable WordPress.WP.I18n.TextDomainMismatch

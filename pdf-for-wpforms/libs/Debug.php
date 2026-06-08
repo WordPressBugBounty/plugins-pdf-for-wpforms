@@ -1,13 +1,16 @@
-<?php 
+<?php
+
 namespace simplehtmldom;
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+if (! defined('ABSPATH')) exit; // Exit if accessed directly
 
 /**
  * Implements functions for debugging purposes. Debugging can be enabled and
  * disabled on demand. Debug messages are send to error_log by default but it
  * is also possible to register a custom debug handler.
  */
-class Debug {
+class Debug
+{
 
 	private static $enabled = false;
 	private static $debugHandler = null;
@@ -63,8 +66,7 @@ class Debug {
 		$idx = 0;
 		$debugmessage = '';
 
-		foreach($backtrace as $caller)
-		{
+		foreach ($backtrace as $caller) {
 			if (!isset($caller['file']) && !isset($caller['line'])) {
 				break; // Unknown caller
 			}
@@ -73,10 +75,10 @@ class Debug {
 
 			if ($idx > 1) { // Do not include the call to Debug::log
 				$debugmessage .= ' '
-				. $caller['class']
-				. $caller['type']
-				. $caller['function']
-				. '()';
+					. $caller['class']
+					. $caller['type']
+					. $caller['function']
+					. '()';
 			}
 
 			$debugmessage .= ']';
@@ -90,7 +92,7 @@ class Debug {
 		$output = '[DEBUG] ' . trim($debugmessage) . ' "' . $message . '"';
 
 		if (is_null(self::$debugHandler)) {
-			error_log($output);
+			//error_log($output);
 		} else {
 			call_user_func_array(self::$debugHandler, array($output));
 		}
@@ -106,7 +108,7 @@ class Debug {
 	{
 		if (!self::isEnabled()) return;
 
-		$backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
+		$backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT); //phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 		self::log_trace($message, $backtrace);
 	}
 
@@ -121,7 +123,7 @@ class Debug {
 		if (!self::isEnabled()) return;
 
 		// Keep track of caller (file & line)
-		$backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
+		$backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT); //phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 		if (in_array($backtrace[0], self::$callerLock, true)) return;
 
 		self::$callerLock[] = $backtrace[0];
