@@ -8,7 +8,8 @@ Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-The plugin helps you create PDF for WPForms you can builder PDF template
+PDF Builder for WPForms helps you create custom PDF documents from form submissions using a powerful drag-and-drop template builder.
+
 
 == Description ==
 
@@ -18,37 +19,119 @@ The plugin helps you create PDF for WPForms you can builder PDF template
 **Download Pro Version**: <https://add-ons.org/plugin/pdf-for-wp-forms-pro/>
 **Documents**: <https://pdf.add-ons.org/document/>
 
-The PDF For WPForms add-on is an additional plugin that extends the functionality of WPForms by providing features for generating PDF files from form submissions and attaching PDF files to email notifications.
+Create custom PDF documents from WPForms submissions using a powerful drag-and-drop PDF builder.
 
-The plugin provides sufficient base elements and WPForms elements as well as developmental tools for users to build a completed PDF: Text/HTML, Table, QRCode, Barcode, Page Break, Divider, Image, Spacer,...and other elements.
+Generate certificates, quotes, contracts, reports, invoices, tickets, and other PDF documents without coding.
 
-== Drag and Drop Templates ==
-The plugin offers a web-based drag & drop PDF template editor that lets you design templates and generate PDF documents from reusable templates without coding.
-== Unlimited Use, No Restrictions ==
-There are zero hard limits to the number of PDFs you can configure across all your forms or generate on your entries. 
-== Additional Fonts ==
-Match your branding and enhance the overall look and feel of PDFs by install your own fonts.
-== Custom PDF Paper Size ==
-Allows you to add custom different paper sizes for your PDF templates. 
-== Shortcode and Merge Tags ==
-You can generate a link or URL to PDFs using both shortcodes and merge tags so your users can download the PDF right after form submission.
-== Conditional Logic ==
-You can hide or show PDF content or create or uncreate pdf
-== The Second PDF For a Form ==
-It is possible to make a generation of multiple PDFs for the same form.
-== Download PDF Files ==
-You can view and download PDFs from the WPForms Entries page.
-== Smart Real-Time Preview ==
-View the instant preview of the customization for documents as you make them. See real-time previews of the last placed order with your desired custom appearance.
-== Privacy and Security ==
-Your form data is never sent to a third party to generate the PDFs and the documents are generated directly on your web server.
-== Page Break  ==
-We can use Page Break and new content will be move on next pages in PDF.
-== Multilingual ==
-A multitude of languages from across the globe can be displayed in PDFs, include complex scripts like Hebrew, Arabic, Thai, Japanese, Chinese, and Korean.
+Automatically attach generated PDFs to WPForms email notifications, allow users to download PDFs after submission, and fully customize your PDF layouts using dynamic form data.
+
+== Why Choose PDF Builder for WPForms? ==
+
+* Drag-and-drop PDF builder
+* No coding required
+* Dynamic WPForms field data
+* Attach PDFs to email notifications
+* Download PDFs after form submission
+* Conditional logic support
+* QR codes and barcodes
+* Multiple PDF templates per form
+* Multilingual and RTL ready
+
+== Key Features ==
+
+=== Drag and Drop PDF Builder ===
+
+Design custom PDF templates using an intuitive drag-and-drop editor.
+
+=== Dynamic Form Data ===
+
+Insert WPForms field values dynamically into your PDF documents.
+
+=== Conditional Logic ===
+
+Show or hide PDF content and control when PDF documents are generated.
+
+=== Multiple PDFs Per Form ===
+
+Generate multiple PDF documents from a single form submission.
+
+=== Download PDF Files ===
+
+View, download, and manage generated PDFs directly from the WPForms Entries page.
+
+=== QR Codes & Barcodes ===
+
+Generate dynamic QR codes and barcodes using form submission data for certificates, tickets, reports, and other PDF documents.
+
+=== Email PDF Attachments ===
+
+Automatically attach generated PDF documents to WPForms email notifications and send them to users or administrators.
+
+=== Repeater Field Support ===
+
+Generate PDF documents using data collected from WPForms Repeater fields.
+
+=== Shortcodes and Merge Tags ===
+
+Generate PDF download links using shortcodes and merge tags.
+
+=== Smart Real-Time Preview ===
+
+Preview your PDF templates instantly while editing.
+
+=== Page Break Support ===
+
+Insert page breaks and organize content across multiple PDF pages.
+
+=== Custom PDF Paper Sizes ===
+
+Create PDF templates using custom paper sizes.
+
+=== Additional Fonts ===
+
+Upload and use custom fonts to match your brand identity.
+
+=== Multilingual Support ===
+
+Generate PDFs in multiple languages, including RTL languages.
+
+=== Privacy and Security ===
+
+PDF documents are generated directly on your server without third-party services.
+
+=== Unlimited Use, No Restrictions ===
+
+Create and generate as many PDF documents as needed without usage limits.
 
 
-== PRO VERSION ==
+== Popular Use Cases ==
+
+=== Certificates ===
+
+Automatically generate personalized certificates after form submission.
+
+=== Quotes & Estimates ===
+
+Create professional PDF quotations and send them directly to customers.
+
+=== Contracts & Agreements ===
+
+Generate contracts using submitted form data and attach them to email notifications.
+
+=== Event Tickets ===
+
+Create downloadable tickets with QR codes and attendee information.
+
+=== Reports & Summaries ===
+
+Convert form submissions into structured PDF reports.
+
+=== Application Forms ===
+
+Generate printable PDF copies of submitted applications and registrations.
+
+== Upgrade to Pro version ==
+Unlock advanced PDF customization and automation features:
 * Table Customization
 * QRcode Supports
 * Barcode Supports
@@ -61,8 +144,9 @@ A multitude of languages from across the globe can be displayed in PDFs, include
 
 == External services ==
 
-This plugin connects to the Dropbox API to store PDF files. Data is only sent to Dropbox when the user has configured and enabled the integration in the plugin settings. This service is provided by Dropbox, Inc.
-terms of use <https://www.dropbox.com/terms>, privacy policy <https://www.dropbox.com/privacy>
+This plugin connects to the Dropbox API to store PDF files. Data is only sent to Dropbox when the user has configured and enabled the integration in the plugin settings. 
+This service is provided by Dropbox, Inc.
+Terms of Use <https://www.dropbox.com/terms>, Privacy Policy <https://www.dropbox.com/privacy>
 
 	
 == Frequently Asked Questions ==
@@ -75,14 +159,14 @@ Make sure the mapping exists in the list of mappings and the field names match.
 
 If you attached an updated PDF file and your mappings were associated with the old attachment ID then those mappings will be deleted and you will need to recreate them.
 
-= Can I create 2,3 pdf files? =
-You can create unlimited PDF files for 1-time submission form, depending on the power of your server.
+= Can I generate multiple PDF documents from a single form submission? =
+Yes. You can generate multiple PDF documents from a single WPForms submission using different templates and configurations. The number of PDFs that can be generated depends on your server resources.
 
 
 == Installation ==
 **Normal installation**
 
-1. Download the pdf-for--wpforms.zip file to your computer.
+1. Download the pdf-for-wpforms.zip file to your computer.
 1. Unzip the file.
 1. Upload the `pdf-for-wpforms.zip` directory to your `/wp-content/plugins/` directory.
 1. Activate the plugin through the 'Plugins' menu in WordPress.
