@@ -2,8 +2,8 @@
 Contributors: addonsorg
 Tags: form pdf, WPForms pdf,contact form pdf, pdf contact form, pdf WPForms
 Requires at least: 2.0
-Tested up to: 7.0
-Stable tag: 7.1.0
+Tested up to: 7.1
+Stable tag: 7.2.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -173,6 +173,9 @@ Yes. You can generate multiple PDF documents from a single WPForms submission us
 Document include in plugin
 
 == Changelog ==
+= 7.2.0 =
+- Added: {all_fields_full}, html, content filed
+
 = 6.5.2 =
 - Added: Support field Repeater
 

@@ -114,6 +114,25 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend
 					);
 					foreach ($results as $rs) {
 						$shortcodes["{field_id='" . $rs["field_id"] . "'}"] = $rs["value"];
+						$shortcodes['{field_id="' . $rs["field_id"] . '"}'] = $rs["value"];
+					}
+				}
+				$form_id = get_post_meta($post->ID, '_pdfcreator_wpforms', true);
+				if (!empty($form_id)) {
+					$form = wpforms()->form->get(absint($form_id));
+					if (!empty($form->post_content)) {
+						$f_data = wpforms_decode($form->post_content);
+						if (!empty($f_data['fields'])) {
+							foreach ($f_data['fields'] as $f_id => $f_val) {
+								if ($f_val['type'] === 'html' && isset($f_val['code'])) {
+									$shortcodes["{field_id='" . $f_id . "'}"] = $f_val['code'];
+									$shortcodes['{field_id="' . $f_id . '"}'] = $f_val['code'];
+								} elseif ($f_val['type'] === 'content' && isset($f_val['content'])) {
+									$shortcodes["{field_id='" . $f_id . "'}"] = $f_val['content'];
+									$shortcodes['{field_id="' . $f_id . '"}'] = $f_val['content'];
+								}
+							}
+						}
 					}
 				}
 			}
@@ -128,8 +147,8 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend
 		if ($wpdb->get_var($query) == $table_wp_submissions) {
 			$template_id = $data_attrs["id_template"];
 			$id_entry = get_post_meta($template_id, '_pdfcreator_wpforms_entry', true);
+			$shortcodes = array();
 			if ($id_entry != "" && $id_entry != 0) {
-				$shortcodes = array();
 				$results = $wpdb->get_results(
 					$wpdb->prepare(
 						"SELECT id,value,field_id FROM $table_wp_submissions WHERE entry_id = %s ORDER BY entry_id DESC LIMIT 200",
@@ -139,7 +158,28 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend
 				);
 				foreach ($results as $rs) {
 					$shortcodes["{field_id='" . $rs["field_id"] . "'}"] = $rs["value"];
+					$shortcodes['{field_id="' . $rs["field_id"] . '"}'] = $rs["value"];
 				}
+			}
+			$form_id = get_post_meta($template_id, '_pdfcreator_wpforms', true);
+			if (!empty($form_id)) {
+				$form = wpforms()->form->get(absint($form_id));
+				if (!empty($form->post_content)) {
+					$f_data = wpforms_decode($form->post_content);
+					if (!empty($f_data['fields'])) {
+						foreach ($f_data['fields'] as $f_id => $f_val) {
+							if ($f_val['type'] === 'html' && isset($f_val['code'])) {
+								$shortcodes["{field_id='" . $f_id . "'}"] = $f_val['code'];
+								$shortcodes['{field_id="' . $f_id . '"}'] = $f_val['code'];
+							} elseif ($f_val['type'] === 'content' && isset($f_val['content'])) {
+								$shortcodes["{field_id='" . $f_id . "'}"] = $f_val['content'];
+								$shortcodes['{field_id="' . $f_id . '"}'] = $f_val['content'];
+							}
+						}
+					}
+				}
+			}
+			if (!empty($shortcodes)) {
 				$html = str_replace(array_keys($shortcodes), array_values($shortcodes), $html);
 			}
 		}
@@ -559,6 +599,25 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend
 				);
 				$message = Yeepdf_Create_PDF::pdf_creator_preview($data_send_settings);
 				$message = $this->add_all_fields($message, $form_data, $fields, $entry_id);
+				if (!empty($form_data['fields'])) {
+					$special_tags = [];
+					foreach ($form_data['fields'] as $f_id => $f_val) {
+						if ($f_val['type'] === 'html' && isset($f_val['code'])) {
+							$special_tags["{field_id='" . $f_id . "'}"] = $f_val['code'];
+							$special_tags['{field_id="' . $f_id . '"}'] = $f_val['code'];
+							$special_tags["{field_html_id='" . $f_id . "'}"] = $f_val['code'];
+							$special_tags['{field_html_id="' . $f_id . '"}'] = $f_val['code'];
+						} elseif ($f_val['type'] === 'content' && isset($f_val['content'])) {
+							$special_tags["{field_id='" . $f_id . "'}"] = $f_val['content'];
+							$special_tags['{field_id="' . $f_id . '"}'] = $f_val['content'];
+							$special_tags["{field_html_id='" . $f_id . "'}"] = $f_val['content'];
+							$special_tags['{field_html_id="' . $f_id . '"}'] = $f_val['content'];
+						}
+					}
+					if (!empty($special_tags)) {
+						$message = str_replace(array_keys($special_tags), array_values($special_tags), $message);
+					}
+				}
 				$message = wpforms_process_smart_tags($message, $form_data, $fields, $entry_id);
 				$pattern = '/<tr[^>]*class="[^"]*wpforms-order-summary-placeholder-hidden[^"]*"[^>]*>.*?<\/tr>/is';
 				$message = preg_replace($pattern, '', $message);
@@ -922,6 +981,7 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend
 					"{entry_id}" => "Entry ID",
 					"{entry_details_url}" => "Entry Details URL",
 					"{all_fields}" => "{all_fields}",
+					"{all_fields_full}" => "{all_fields_full}",
 				);
 				$form = wpforms()->form->get(absint($form_id));
 				// If the form doesn't exists, abort.
@@ -930,27 +990,17 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend
 				}
 				// Pull and format the form data out of the form object.
 				$form_data = ! empty($form->post_content) ? wpforms_decode($form->post_content) : '';
-				// Check to see if we are showing all allowed fields, or only specific ones.
-				$form_field_ids = isset($atts['fields']) && $atts['fields'] !== '' ? explode(',', str_replace(' ', '', $atts['fields'])) : [];
 				// Setup the form fields.
-				$form_fields = array();
-				if (empty($form_field_ids)) {
-					if (isset($form_data['fields'])) {
-						$form_fields = $form_data['fields'];
-					}
-				} else {
-					$form_fields = [];
-					foreach ($form_field_ids as $field_id) {
-						if (isset($form_data['fields'][$field_id])) {
-							$form_fields[$field_id] = $form_data['fields'][$field_id];
-						}
-					}
-				}
+				$form_fields = ! empty($form_data['fields']) && is_array($form_data['fields']) ? $form_data['fields'] : [];
 				if (is_array($form_fields)) {
 					foreach ($form_fields as $id => $datas) {
 						$label = $id;
-						if (isset($datas["label"])) {
+						if (! empty($datas["label"])) {
 							$label = $datas["label"];
+						} elseif (! empty($datas["name"])) {
+							$label = $datas["name"];
+						} elseif (! empty($datas["type"])) {
+							$label = ucfirst($datas["type"]) . " #" . $id;
 						}
 						$inner_shortcode["{field_id='" . $id . "'}"] = $label;
 					}
@@ -963,25 +1013,36 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend
 	}
 	function add_all_fields($message, $form_data, $fields, $entry_id)
 	{
-		if (strpos($message, '{all_fields}') === false) {
-			// Wrap the message with a table row after processing tags.
-			//$message = $this->wrap_content_with_table_row( $message,$form_data,$fields,$entry_id );
-		} else {
-			// If {all_fields} is present, extract content before and after into separate variables.
-			list($before, $after) = array_map('trim', explode('{all_fields}', $message, 2));
-			// Wrap before and after content with <tr> tags if they are not empty to maintain styling.
-			// Note that whatever comes after the {all_fields} should be wrapped in a table row to avoid content misplacement.
-			$before_tr = ! empty($before) ? $this->wrap_content_with_table_row($before, $form_data, $fields, $entry_id) : '';
-			$after_tr  = ! empty($after) ? $this->wrap_content_with_table_row($after, $form_data, $fields, $entry_id) : '';
-			// Replace {all_fields} with $this->process_field_values() output.
-			$message = $before_tr . $this->process_field_values() . $after_tr;
+		$pattern = '/\{(all_fields(_full)?)([^}]*)\}/i';
+		if (! preg_match($pattern, $message)) {
+			return $message;
 		}
+
+		$message = preg_replace_callback($pattern, function($matches) {
+			$tag = strtolower($matches[1]);
+			$attrs_str = $matches[3] ?? '';
+			$is_full = ($tag === 'all_fields_full');
+
+			$allowed_ids = [];
+			$excluded_ids = [];
+			if (! empty($attrs_str)) {
+				if (preg_match('/(?:fields|include)\s*=\s*["\']([^"\']+)["\']/i', $attrs_str, $m)) {
+					$allowed_ids = array_map('trim', explode(',', $m[1]));
+				}
+				if (preg_match('/exclude\s*=\s*["\']([^"\']+)["\']/i', $attrs_str, $m)) {
+					$excluded_ids = array_map('trim', explode(',', $m[1]));
+				}
+			}
+
+			return $this->process_field_values($is_full, $allowed_ids, $excluded_ids);
+		}, $message);
+
 		return $message;
 	}
-	public function process_field_values()
+	public function process_field_values($is_full = false, $allowed_ids = [], $excluded_ids = [])
 	{
-		// If fields are empty, return an empty message.
-		if (empty($this->fields)) {
+		// If both fields and form_data fields are empty, return an empty message.
+		if (empty($this->fields) && empty($this->form_data['fields'])) {
 			return '';
 		}
 		// If no message was generated, create an empty message.
@@ -1005,10 +1066,10 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend
 			'wpforms_email_display_empty_fields',
 			false
 		);
-		$message = $this->process_html_message($show_empty_fields);
+		$message = $this->process_html_message($show_empty_fields, $is_full, $allowed_ids, $excluded_ids);
 		return empty($message) ? $default_message : $message;
 	}
-	public function process_html_message($show_empty_fields = false)
+	public function process_html_message($show_empty_fields = false, $is_full = false, $allowed_ids = [], $excluded_ids = [])
 	{ // phpcs:ignore Generic.Metrics.CyclomaticComplexity
 		$message = '<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; border-spacing: 0px; padding: 0px; vertical-align: top;">';
 		/**
@@ -1020,20 +1081,33 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend
 		 * @param array $other_fields List of field types.
 		 * @param array $form_data    Form data.
 		 */
+		$default_other_fields = $is_full ? ['html', 'content', 'divider', 'pagebreak'] : [];
 		$other_fields = apply_filters_deprecated( // phpcs:disable WPForms.Comments.ParamTagHooks.InvalidParamTagsQuantity
 			'wpforms_emails_notifications_display_other_fields',
-			[[], $this->form_data],
+			[$default_other_fields, $this->form_data],
 			'1.8.5.2 of the WPForms plugin',
 			'wpforms_email_display_other_fields'
 		);
 		/** This filter is documented in /includes/emails/class-emails.php */
 		$other_fields = apply_filters( // phpcs:ignore WPForms.PHP.ValidateHooks.InvalidHookName
 			'wpforms_email_display_other_fields',
-			[],
+			$default_other_fields,
 			$this
 		);
+		if (empty($this->form_data['fields']) || ! is_array($this->form_data['fields'])) {
+			return '';
+		}
 		foreach ($this->form_data['fields'] as $field_id => $field) {
+			if (! empty($allowed_ids) && ! in_array((string) $field_id, $allowed_ids, true)) {
+				continue;
+			}
+			if (! empty($excluded_ids) && in_array((string) $field_id, $excluded_ids, true)) {
+				continue;
+			}
+
 			$field_type = ! empty($field['type']) ? $field['type'] : '';
+			$is_special_field = false;
+
 			// Check if the field is empty in $this->fields.
 			if (empty($this->fields[$field_id])) {
 				// Check if the field type is in $other_fields, otherwise skip.
@@ -1042,6 +1116,7 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend
 				}
 				// Handle specific field types.
 				list($field_name, $field_val) = $this->process_special_field_values($field);
+				$is_special_field = true;
 			} else {
 				// Handle fields that are not empty in $this->fields.
 				if (! $show_empty_fields && (! isset($this->fields[$field_id]['value']) || (string) $this->fields[$field_id]['value'] === '')) {
@@ -1050,6 +1125,31 @@ class Superaddons_Pdf_Creator_Wpfroms_Backend
 				$field_name = isset($this->fields[$field_id]['name']) ? $this->fields[$field_id]['name'] : '';
 				$field_val  = empty($this->fields[$field_id]['value']) && ! is_numeric($this->fields[$field_id]['value']) ? '<em>' . esc_html__('(empty)', 'wpforms-lite') . '</em>' : $this->fields[$field_id]['value'];
 			}
+
+			// Render special non-input fields
+			if ($is_special_field) {
+				if (in_array($field_type, ['html', 'content'], true)) {
+					$message .= '<tr style="padding: 0px; vertical-align: top;">';
+					if (! empty($field['name']) && $field['name'] !== esc_html__('HTML / Code Block', 'wpforms-lite')) {
+						$message .= '<td style="overflow-wrap: break-word; vertical-align: top; font-weight: normal; padding: 25px 10px 25px 0px; margin: 0px; font-size: 15px; color: rgb(51, 51, 51); border-bottom: 1px solid rgb(226, 226, 226); min-width: 113px; line-height: 22px; border-collapse: collapse;">
+                        <strong style="margin-bottom: 0px;">' . esc_html($field['name']) . '</strong>
+                    </td>';
+						$message .= '<td valign="middle" style="overflow-wrap: break-word; font-weight: normal; padding: 25px 0px; margin: 0px; font-size: 15px; color: rgb(51, 51, 51);line-height: 20px; border-bottom: 1px solid rgb(226, 226, 226); vertical-align: middle; border-collapse: collapse;"> ' . $field_val . ' </td>';
+					} else {
+						$message .= '<td colspan="2" style="overflow-wrap: break-word; font-weight: normal; padding: 15px 0px; margin: 0px; font-size: 15px; color: rgb(51, 51, 51); border-bottom: 1px solid rgb(226, 226, 226); line-height: 20px; vertical-align: middle; border-collapse: collapse;"> ' . $field_val . ' </td>';
+					}
+					$message .= '</tr>';
+					continue;
+				}
+
+				if (in_array($field_type, ['divider', 'pagebreak'], true)) {
+					$message .= '<tr style="padding: 0px; vertical-align: top;">';
+					$message .= '<td colspan="2" style="text-align: center; overflow-wrap: break-word; font-weight: bold; padding: 15px 0px; margin: 0px; font-size: 15px; color: rgb(51, 51, 51); border-bottom: 1px solid rgb(226, 226, 226); line-height: 20px; border-collapse: collapse;">' . $field_name . (! empty($field_val) ? '<div style="font-weight:normal;font-size:13px;color:#777;margin-top:5px;">' . $field_val . '</div>' : '') . '</td>';
+					$message .= '</tr>';
+					continue;
+				}
+			}
+
 			// Set a default field name if empty.
 			if (empty($field_name) && $field_name !== null) {
 				$field_name = $this->get_default_field_name($field_id);
